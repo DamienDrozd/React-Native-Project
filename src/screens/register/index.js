@@ -41,18 +41,21 @@ const Register = ({ navigation }) => {
             })
         }
         console.log(header);
-        // const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        // if (email.length < 5 || password.length < 8 || password != repeatPassword || !email.toLowerCase().match(email_regex)) {
-        //     alert("error");
-        // } else {
-            // const API_LINK = process.env['API_LINK'];
+        const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if (email.length < 5 || password.length < 8 || password != repeatPassword || !email.toLowerCase().match(email_regex)) {
+            alert("erreur de saisie");
+        } else {
+            // const API_LINK = process.env['API_LINK'] + "/api/auth/signup";
+            // const API_LINK = "http://localhost:3002/api/auth/signup";
+            const API_LINK = "https://login.hikkary.com/users/login";
             console.log("API_LINK : ", API_LINK);
             console.log("envoi de la requête");
             axios({
             method: 'post',
-            url: API_LINK + '/auth/signup',
+            url: API_LINK,
+            headers: { "Content-Type": "application/json" },
             data: {
-                email: email,
+                username : email, 
                 password: password,
             },
             })
@@ -61,14 +64,14 @@ const Register = ({ navigation }) => {
                 console.log("response api : ", response.data);
                 AsyncStorage.setItem('token', response.headers['x-access-token']).then(() => {
                     console.log("Register success");
-                    navigation.navigate("Characters");
+                    navigation.navigate();
                 }).catch((error) => {
                     console.log("storage error : ", error);
                 });
             }).catch(error => {
                 console.log("api error : ", error);
             });
-        // }
+        }
         
     }
     

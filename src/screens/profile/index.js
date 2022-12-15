@@ -4,17 +4,17 @@ import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 
 
 
-const Home = ({ navigation }) => { 
+const Profile = ({ navigation }) => { 
     
 
     return (
         <View>
             <Text>
-                Home
+                Profile
             </Text>
         </View >
     );
     }
  
 
-export default Home; 
+export default Profile; 

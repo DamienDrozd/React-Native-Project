@@ -4,17 +4,17 @@ import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 
 
 
-const Home = ({ navigation }) => { 
+const Settings = ({ navigation }) => { 
     
 
     return (
         <View>
             <Text>
-                Home
+                Settings
             </Text>
         </View >
     );
     }
  
 
-export default Home; 
+export default Settings; 

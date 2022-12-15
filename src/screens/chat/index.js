@@ -4,17 +4,17 @@ import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 
 
 
-const Home = ({ navigation }) => { 
+const Chat = ({ navigation }) => { 
     
 
     return (
         <View>
             <Text>
-                Home
+                Chat
             </Text>
         </View >
     );
     }
  
 
-export default Home; 
+export default Chat; 
