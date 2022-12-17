@@ -2,32 +2,18 @@ import React, {useEffect} from 'react';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {View, Text, Button, SafeAreaView, ActivityIndicator} from 'react-native';
+import { useNavigation} from '@react-navigation/native';
+
 import Login from '../screens/login';
 import Register from '../screens/register';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createNativeStackNavigator();
 
-const PublicStack = ({navigation}) => {
-  const [loading, setLoading] = React.useState(true);
+const PublicStack = () => {
+  // const navigation = useNavigation();
+  
+ 
 
-  useEffect(() => {
-    AsyncStorage.getItem('token').then(token => {
-      if (token) {
-        setLoading(false);
-        navigation.navigate('Auth', {screen: 'Characters'});
-      }
-    });
-  });
-
-  // if (loading) {
-  //   return (
-  //     <SafeAreaView>
-  //       <ActivityIndicator />
-  //     </SafeAreaView>
-  //   );
-  // }
-
-  function DetailsScreen({ navigation }) {
+  function DetailsScreen({navigation}) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Details Screen</Text>
