@@ -1,9 +1,11 @@
 import React, {useEffect} from 'react';
 import { useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthStack from './authStack';
 import PublicStack from './publicStack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProfileStack from './profileStack';
+
 
 
 
@@ -18,21 +20,22 @@ const Routes = () => {
   
 
   useEffect(() => {
-    AsyncStorage.getItem('token').then(token => {
-      if (token) {
-        setLoading(false);
-        navigation.navigate('Auth', {screen: 'Home'});
-      } else {
-        setLoading(false);
-        navigation.navigate('Public');
-      }
-    });
+    // AsyncStorage.getItem('token').then(token => {
+    //   if (token) {
+    //     setLoading(false);
+    //     navigation.navigate('Auth', {screen: 'Home'});
+    //   } else {
+    //     setLoading(false);
+    //     navigation.navigate('Public');
+    //   }
+    // });
   });
   
   return (
-    <Stack.Navigator initialRouteName="Auth" screenOptions={{headerShown: false,}}>
+    <Stack.Navigator initialRouteName="Profile" screenOptions={{headerShown: false,}}>
       <Stack.Screen name="Public" component={PublicStack} />
       <Stack.Screen name="Auth" component={AuthStack} />
+      <Stack.Screen name="Profile" component={ProfileStack} />
     </Stack.Navigator>
   );
 };

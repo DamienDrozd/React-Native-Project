@@ -6,7 +6,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home';
 import Chat from '../screens/chat';
 import Settings from '../screens/settings';
-import Profile from '../screens/profile';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -16,7 +15,6 @@ const HomeStack = () => {
           <Tab.Screen name="Home" component={Home} />
           <Tab.Screen name="Chat" component={Chat} />
           <Tab.Screen name="Settings" component={Settings} />
-          <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
     );
   }
@@ -27,7 +25,6 @@ const HomeStack = () => {
           <Tab.Screen name="Home" component={Home} />
           <Tab.Screen name="Chat" component={Chat} />
           <Tab.Screen name="Settings" component={Settings} />
-          <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
     );
   }
@@ -38,7 +35,6 @@ const HomeStack = () => {
           <Tab.Screen name="Home" component={Home} />
           <Tab.Screen name="Chat" component={Chat} />
           <Tab.Screen name="Settings" component={Settings} />
-          <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
     );
   }
@@ -49,7 +45,6 @@ const HomeStack = () => {
           <Tab.Screen name="Home" component={Home} />
           <Tab.Screen name="Chat" component={Chat} />
           <Tab.Screen name="Settings" component={Settings} />
-          <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
     );
   }
@@ -63,7 +58,6 @@ const AuthStack = ({navigation}) => {
       <Stack.Screen name="HomeStack" component={HomeStack} options={{title: 'Home'}} />
       <Stack.Screen name="ChatStack" component={ChatStack} options={{title: 'Chat'}} />
       <Stack.Screen name="SettingsStack" component={SettingsStack} options={{title: 'Settings'}} />
-      <Stack.Screen name="ProfileStack" component={ProfileStack} options={{title: 'Profile'}} />
     </Stack.Navigator>
   );
 };
