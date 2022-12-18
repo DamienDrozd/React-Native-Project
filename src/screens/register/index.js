@@ -64,7 +64,7 @@ const Register = ({ navigation }) => {
                 console.log("response api : ", response.data);
                 AsyncStorage.setItem('token', response.headers['x-access-token']).then(() => {
                     console.log("Register success");
-                    navigation.navigate();
+                    navigation.navigate("Profile");
                 }).catch((error) => {
                     console.log("storage error : ", error);
                 });

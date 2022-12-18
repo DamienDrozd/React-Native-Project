@@ -11,7 +11,7 @@ import Title from "../../components/Title";
 
 const Login = ({ navigation }) => { 
 
-    const [userName, setUserName] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState(""); 
 
     useEffect(() => {
@@ -25,25 +25,31 @@ const Login = ({ navigation }) => {
 
     const Login = () => {
         console.log("Login");
-        console.log(userName);
+        console.log(email);
         console.log(password);
         let header = {
             method: 'POST',
             data: JSON.stringify({
-                username : userName,
+                email : email,
                 password: password
             })
         }
         console.log(header);
-        if (userName.length < 3 || password.length < 8) {
-            alert("error");
+        const email_regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if ( !email.toLowerCase().match(email_regex)) {
+            alert("erreur de saisie");
         } else {
+            // const API_LINK = process.env['API_LINK'] + "/api/auth/signin";
+            // const API_LINK = "http://localhost:3002/api/auth/signin";
+            const API_LINK = "https://login.hikkary.com/users/login";
+            console.log("API_LINK : ", API_LINK);
             console.log("envoi de la requête");
             axios({
             method: 'post',
-            url: 'https://login.hikkary.com/users/login',
+            url: API_LINK,
+            headers: { "Content-Type": "application/json" },
             data: {
-                username: userName,
+                username : email, 
                 password: password,
             },
             })
@@ -51,12 +57,14 @@ const Login = ({ navigation }) => {
                 console.log(response);
                 console.log("response api : ", response.data);
                 AsyncStorage.setItem('token', response.headers['x-access-token']).then(() => {
-                    console.log("login success");
-                    navigation.navigate("Characters");
+                    console.log("Login success");
+                    navigation.navigate("Auth");
                 }).catch((error) => {
-                    console.log(error);
+                    console.log("storage error : ", error);
                 });
-            })
+            }).catch(error => {
+                console.log("api error : ", error);
+            });
         }
         
     }
@@ -67,12 +75,12 @@ const Login = ({ navigation }) => {
             <Title title="Login page"/>
             <Logo />
             <Text>
-                Username:
+                Email:
             </Text>
             <TextInput
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                value={userName}
-                onChangeText={(text) => setUserName(text)}
+                value={email}
+                onChangeText={(text) => setEmail(text)}
             />
 
 

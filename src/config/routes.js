@@ -20,15 +20,15 @@ const Routes = () => {
   
 
   useEffect(() => {
-    // AsyncStorage.getItem('token').then(token => {
-    //   if (token) {
-    //     setLoading(false);
-    //     navigation.navigate('Auth', {screen: 'Home'});
-    //   } else {
-    //     setLoading(false);
-    //     navigation.navigate('Public');
-    //   }
-    // });
+    AsyncStorage.getItem('token').then(token => {
+      if (token) {
+        setLoading(false);
+        navigation.navigate('Auth', {screen: 'Home'});
+      } else {
+        setLoading(false);
+        navigation.navigate('Public');
+      }
+    });
   });
   
   return (

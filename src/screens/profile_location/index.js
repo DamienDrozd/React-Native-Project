@@ -3,15 +3,22 @@
 import React, {  useEffect, useState  } from "react";
 import { View, Text, Button, TextInput } from "react-native";
 import axios from "axios";
+// import google from "google-maps"
 import SwitchSelector from "react-native-switch-selector";
  
-export default function Recherche() {
 
-    const [age_min, setAge_min] = useState(0);
-    const [age_max, setAge_max] = useState(0);
-    const [preference , setPreference] = useState("")
 
-    
+
+
+
+
+export default function Location() {
+
+    const [userList, setUserList] = useState({});
+    const [longitude, setLongitude] = useState(0);
+    const [latitude, setLatitude] = useState(0);
+    const [searchRange, setSearchRange] = useState(0);
+
 
   // useEffect(() => {
         
@@ -45,65 +52,44 @@ export default function Recherche() {
   // }, []);
 
 
-  // document.getElementById("searchRange").value
-  // if(document.getElementById("searchRange") !== null){
-  //   document.getElementById("zone").value = document.getElementById("searchRange").value
-  // }
-
     
-    return (
+return (
+  <View>
+        
+    {/* <Button onClick={getLocation} className="btn btn-dark btn-lg btn-block" >Localiser</Button> */}
 
-      <View>
-        <View>
-          <Text>
-            Age minimum recherché
-          </Text>
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            value={age_min}
-            keyboardType="numeric"
-            onChangeText={(text) => setAge_min(text)}
-          />
-        </View>
-        <View>
-          <Text>
-            Age maximum recherché
-          </Text>
-          <TextInput
-            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            value={age_max}
-            keyboardType="numeric"
-            onChangeText={(text) => setAge_max(text)}
-          />
-        </View>
+      {/* <label>Longitude</label>
+      <input {...register("longitude")} type="text" id="longitude" class="form-control ex1" disabled></input>
 
-        <View className="form-group">
-          <Text>
-            Preférence sexuelle
-          </Text>
-          <View className="container">
-          <SwitchSelector
-            initial={0}
-            onPress={value => setPreference({ gender: value })}
-            hasPadding
-            options={[
-              { label: "Homme", value: "Male"}, 
-              { label: "Femme", value: "Female"},
-              { label: "Bisexuel", value: "bi"} 
-            ]}
-            testID="gender-switch-selector"
-            accessibilityLabel="gender-switch-selector"
-          />
-        </View>
-
-          
-        <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
+      <label>Latitude</label>
+      <input {...register("latitude")} type="text" id="latitude" class="form-control ex1" disabled></input> */}
+    <View className="form-group">
+      <Text>Zone de recherche</Text>
+      {/* <View class="range">
+        <input {...register("searchRange", { required: true})} type="range" class="form-range" min="0" max="100" id="searchRange" />
       </View>
+      <input type="text" id="zone" class="form-control ex1" disabled></input> */}
+    </View>
+    <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
   </View>
   );
 }
 
   
+
+// function getLocation() {
+//   if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(showPosition);
+//   } else {
+//     console.error("Geolocation is not supported by this browser.");
+//   }
+// }
+
+// function showPosition(position) {
+//   document.getElementById("longitude").value = position.coords.longitude
+//   document.getElementById("latitude").value = position.coords.latitude
+//   return {latitude: position.coords.latitude, longitude: position.coords.longitude};
+// }
 
 
 
@@ -113,9 +99,9 @@ export default function Recherche() {
 function submit(state, userList) {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position)=>{
-      userList.preference_gender = state.preference_gender;
-      userList.age_min = state.age_min;
-      userList.age_max = state.age_max;
+      userList.longitude = position.coords.longitude;
+      userList.latitude = position.coords.latitude;
+      userList.zone_recherche = state.searchRange;
       console.log(userList)
 
   const requestOptions = {
@@ -136,3 +122,4 @@ function submit(state, userList) {
   }
 }
     
+

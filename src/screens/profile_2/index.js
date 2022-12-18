@@ -1,14 +1,19 @@
 import React, {  useEffect, useState  } from "react";
 import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 import axios from "axios";
-// import { DateInput } from 'react-native-date-input';
+import DatePicker from 'react-native-date-picker'
+import SwitchSelector from "react-native-switch-selector";
 
 
 
 export default function Profile2() {
 
   const [userList, setUserList] = useState([]);
-  const [birthday, setBirthday] = useState('');
+  const [birthday, setBirthday] = useState(new Date());
+  const [open, setOpen] = useState(false)
+  const [gender, setGender] = useState("Male");
+  
+
 
 
   // useEffect(() => {
@@ -42,25 +47,14 @@ export default function Profile2() {
           <View className="form-group">
             <View>
               <Text>Date de naissance</Text>
-              {/* <DateInput
-                inputProps={{
-                  style: {}
+              <DatePicker
+                date={birthday}
+                onDateChange={(date) => {
+                  setOpen(false)
+                  setBirthday(date)
                 }}
-                dateFormat={'DD/MM/YYYY'}
-                defaultValue={new Date(dayjs().subtract(5, 'year').format('DD/MM/YYYY'))}
-                defaultDate={new Date(dayjs().subtract(5, 'year'))}
-                minimumDate={new Date(dayjs().subtract(10, 'year'))}
-                maximumDate={new Date()}
-                handleChange={handleChange}
-                onRef={(input) => (setBirthday(input))}
-              /> */}
-              {/* <input
-                name="anniversaire"
-                {...register("birthday", { required: true, maxLength: 50, minLength: 2 })}
-                type="date"
-                className="form-control"
-                placeholder="date de naissance"
-              /> */}
+                mode = "date"
+              />
             </View>
           </View>
           <View className="container">
@@ -75,37 +69,29 @@ export default function Profile2() {
                   justifyContent: "center",
                 }}
               >
-                {/* <input type="radio" {...register("gender")} value="Male" id="men" /> */}
-                {/* <View for="homme">Homme</View> */}
-
-                {/* <input type="radio" {...register("gender")} value="Female" id="women" /> */}
-                {/* <View for="femme">Femme</View> */}
+                <SwitchSelector
+                  initial={0}
+                  onPress={value => setGender({ gender: value })}
+                  hasPadding
+                  options={[
+                    { label: "Homme", value: "Male"}, 
+                    { label: "Femme", value: "Female"},
+                    { label: "Autre", value: "Other"} 
+                  ]}
+                  testID="gender-switch-selector"
+                  accessibilityLabel="gender-switch-selector"
+                />
               </View>
             </View>
             
 
-            <Button title="Register" onPress={() => submit()} >Mettre a jour le profil</Button>
+            <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
         </View>
 
       </View>
     );
   }
 
-
-// function getCookie(cname) {
-//   let name = cname + "=";
-//   let ca = document.cookie.split(';');
-//   for(let i = 0; i < ca.length; i++) {
-//     let c = ca[i];
-//     while (c.charAt(0) === ' ') {
-//       c = c.substring(1);
-//     }
-//     if (c.indexOf(name) === 0) {
-//       return c.substring(name.length, c.length);
-//     }
-//   }
-//   return "";
-// }
 
 
 

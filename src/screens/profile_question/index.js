@@ -1,116 +1,132 @@
 
 
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import axios from "axios";
+import { View, Text, Image, StyleSheet, TextInput, Button, TouchableOpacity } from "react-native";
+import ModalSelector from 'react-native-modal-selector'
+
 
 
 
  
 export default function QuestionProfil() {
-
-    const [questionList, setquestionList] = useState([]);
-    const { reset, register, handleSubmit, watch, formState: { errors }  } = useForm();
+    let index = 0;
+    const [questionList, setquestionList] = useState([{ key: index++, label: "question 1 ?"},{ key: index++, label: "question 2 ?"},{ key: index++, label: "question 3 ?"}]);
+    const [responseList, setresponseList] = useState(["reponse 1","reponse 2","reponse 3"]);
+    const [selectedQuestion, setSelectedQuestion] = useState(0);
     const final = [];
 
-    useEffect(() => {
+  //   useEffect(() => {
         
 
-      var requestOptions = {  
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-          body: JSON.stringify(questionList) 
-      };
+  //     var requestOptions = {  
+  //         method: 'GET',
+  //         headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
+  //         body: JSON.stringify(questionList) 
+  //     };
       
-      axios.get('http://localhost:3001/api/question',requestOptions).then(async res => {
-        var data = await res.data;
+  //     axios.get('http://localhost:3001/api/question',requestOptions).then(async res => {
+  //       var data = await res.data;
 
-        for (let  interet of data) {
-          final.push(<option value={interet.id}>{interet.name}</option>)
-        }
+  //       for (let  interet of data) {
+  //         final.push(<option value={interet.id}>{interet.name}</option>)
+  //       }
 
-        setquestionList(final)
+  //       setquestionList(final)
           
-      })
+  //     })
   
-      requestOptions = {  
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-          body: JSON.stringify(questionList)  
-      };
-      axios.get('http://localhost:3001/api/profile/question/'+getCookie("userId"),requestOptions).then(async res => {
-      var data = await res.data;
+  //     requestOptions = {  
+  //         method: 'GET',
+  //         headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
+  //         body: JSON.stringify(questionList)  
+  //     };
+  //     axios.get('http://localhost:3001/api/profile/question/'+getCookie("userId"),requestOptions).then(async res => {
+  //     var data = await res.data;
 
-      console.log(data[0].reponse)  
+  //     console.log(data[0].reponse)  
       
-      let defaultChecked = {}; 
+  //     let defaultChecked = {}; 
       
-      defaultChecked.response1 = data[0].reponse; 
-      defaultChecked.response2 = data[1].reponse; 
-      defaultChecked.response3 = data[2].reponse; 
+  //     defaultChecked.response1 = data[0].reponse; 
+  //     defaultChecked.response2 = data[1].reponse; 
+  //     defaultChecked.response3 = data[2].reponse; 
 
-      defaultChecked.question1 = data[0].question_id; 
-      defaultChecked.question2 = data[1].question_id; 
-      defaultChecked.question3 = data[2].question_id;  
-      console.log(defaultChecked)
-      reset({ ...defaultChecked }); 
-    })
+  //     defaultChecked.question1 = data[0].question_id; 
+  //     defaultChecked.question2 = data[1].question_id; 
+  //     defaultChecked.question3 = data[2].question_id;  
+  //     console.log(defaultChecked)
+  //     reset({ ...defaultChecked }); 
+  //   })
         
-  }, []);
+  // }, []);
 
   
 
-    const onSubmit = (data) => {submit(data, getCookie("userId"))}
 
     
     return (
       
-      <div>
-        <form onSubmit={handleSubmit(onSubmit)} className="profilform" >
-          <h1 className="title">Decrivez vous :</h1>
+      <View>
+          <Text>Decrivez vous :</Text>
 
-          <div className="form-group">
-            <div className="form-group">
-              <select {...register("question1")} className="form-select question">
-                  <option value="q">question 1 :</option>
-                {questionList}
-              </select>
-            </div>
-            <div className="form-group">
-              <input {...register("response1")} type="text" className="form-control" placeholder="Votre réponse" />
-            </div>
-          </div>
+          <View className="form-group">
+            <View className="form-group">
+              <ModalSelector
+                data={questionList}
+                initValue="Select something yummy!"
+                onChange={(option)=>{ setSelectedQuestion(option.label)}} 
+              />
+            </View>
+            <View className="form-group">
+              <TextInput
+                value={responseList[0]}
+                onChangeText={(text) => setresponseList(0, text)}
+                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+              />
+              {/* <input {...register("response1")} type="text" className="form-control" placeholder="Votre réponse" /> */}
+            </View>
+          </View>
 
-          <div className="form-group">
-            <div className="form-group">
-              <select {...register("question2")} className="form-select question">
-                  <option value="q">question 2 :</option>
-                {questionList}
-              </select>
-            </div>
-            <div className="form-group">
-              <input {...register("response2")} type="text" className="form-control" placeholder="Votre réponse" />
-            </div>
-          </div>
+          <View className="form-group">
+            <View className="form-group">
+              <ModalSelector
+                data={questionList}
+                initValue="Select something yummy!"
+                onChange={(option)=>{ setSelectedQuestion(option.label)}} 
+              />
+            </View>
+            <View className="form-group">
+              <TextInput
+                value={responseList[1]}
+                onChangeText={(text) => setresponseList(1, text)}
+                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+              />            
+            </View>
+          </View>
 
-          <div className="form-group">
-            <div className="form-group">
-              <select {...register("question3")} className="form-select question">
-                  <option value="q">question 3 :</option>
-                {questionList}
-              </select>
-            </div>
-            <div className="form-group">
-              <input {...register("response3")} type="text" className="form-control" placeholder="Votre réponse" />
-            </div>
-          </div>
+          <View className="form-group">
+            <View className="form-group">
+              <ModalSelector
+                data={questionList}
+                initValue="Select something yummy!"
+                onChange={(option)=>{ setSelectedQuestion(option.label)}} 
+              />
+            </View>
+            <View className="form-group">
+              <TextInput
+                value={responseList[2]}
+                onChangeText={(text) => setresponseList(2, text)}
+                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+              />   
+            </View>
+          </View>
 
           
-
-          <button type="submit" className="btn btn-dark btn-lg btn-block" id="submit_button">Mettre a jour le profil</button>
+          <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
+          {/* <button type="submit" className="btn btn-dark btn-lg btn-block" id="submit_button">Mettre a jour le profil</button> */}
         
-        </form>
-      </div>
+      </View>
     );
   }
 
