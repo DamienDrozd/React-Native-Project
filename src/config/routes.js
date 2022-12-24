@@ -19,17 +19,17 @@ const Routes = () => {
   const [loading, setLoading] = React.useState(true);
   
 
-  useEffect(() => {
-    AsyncStorage.getItem('token').then(token => {
-      if (token) {
-        setLoading(false);
-        navigation.navigate('Auth', {screen: 'Home'});
-      } else {
-        setLoading(false);
-        navigation.navigate('Public');
-      }
-    });
-  });
+  // useEffect(() => {
+  //   AsyncStorage.getItem('token').then(token => {
+  //     if (token) {
+  //       setLoading(false);
+  //       navigation.navigate('Auth', {screen: 'Home'});
+  //     } else {
+  //       setLoading(false);
+  //       navigation.navigate('Public');
+  //     }
+  //   });
+  // });
   
   return (
     <Stack.Navigator initialRouteName="Profile" screenOptions={{headerShown: false,}}>

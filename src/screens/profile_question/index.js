@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { View, Text, Image, StyleSheet, TextInput, Button, TouchableOpacity } from "react-native";
 import ModalSelector from 'react-native-modal-selector'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 
@@ -11,55 +13,45 @@ import ModalSelector from 'react-native-modal-selector'
  
 export default function QuestionProfil() {
     let index = 0;
+    const [userList, setUserList] = useState({});
     const [questionList, setquestionList] = useState([{ key: index++, label: "question 1 ?"},{ key: index++, label: "question 2 ?"},{ key: index++, label: "question 3 ?"}]);
     const [responseList, setresponseList] = useState(["reponse 1","reponse 2","reponse 3"]);
-    const [selectedQuestion, setSelectedQuestion] = useState(0);
-    const final = [];
+    const [selectedQuestion, setSelectedQuestion] = useState([1,2,0]);
 
-  //   useEffect(() => {
-        
-
-  //     var requestOptions = {  
-  //         method: 'GET',
-  //         headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-  //         body: JSON.stringify(questionList) 
-  //     };
+    useEffect(() => {
+      var requestOptions = {  
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
+          body: JSON.stringify(questionList) 
+      };
       
-  //     axios.get('http://localhost:3001/api/question',requestOptions).then(async res => {
-  //       var data = await res.data;
-
-  //       for (let  interet of data) {
-  //         final.push(<option value={interet.id}>{interet.name}</option>)
-  //       }
-
-  //       setquestionList(final)
-          
-  //     })
+      axios.get('http://localhost:3001/api/question',requestOptions).then(async res => {
+        var data = await res.data;
+        setquestionList(final)
+      }).catch(error => {
+          console.error('There was an error with api!', error);
+      });
   
-  //     requestOptions = {  
-  //         method: 'GET',
-  //         headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-  //         body: JSON.stringify(questionList)  
-  //     };
-  //     axios.get('http://localhost:3001/api/profile/question/'+getCookie("userId"),requestOptions).then(async res => {
-  //     var data = await res.data;
-
-  //     console.log(data[0].reponse)  
-      
-  //     let defaultChecked = {}; 
-      
-  //     defaultChecked.response1 = data[0].reponse; 
-  //     defaultChecked.response2 = data[1].reponse; 
-  //     defaultChecked.response3 = data[2].reponse; 
-
-  //     defaultChecked.question1 = data[0].question_id; 
-  //     defaultChecked.question2 = data[1].question_id; 
-  //     defaultChecked.question3 = data[2].question_id;  
-  //     console.log(defaultChecked)
-  //     reset({ ...defaultChecked }); 
-  //   })
+      requestOptions = {  
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
+          body: JSON.stringify(questionList)  
+      };
+      axios.get('http://localhost:3001/api/profile/question/'+getStorage("userId"),requestOptions).then(async res => {
+        var data = await res.data;      
         
-  // }, []);
+        // setresponseList() = data[0].reponse; 
+        // setresponseList() = data[1].reponse; 
+        // ssetresponseList() = data[2].reponse; 
+
+        // questionList() = data[0].question_id; 
+        // questionList() = data[1].question_id; 
+        // questionList() = data[2].question_id;  
+      }).catch(error => {
+          console.error('There was an error with api!', error);
+      });
+        
+  }, []);
 
   
 
@@ -70,33 +62,32 @@ export default function QuestionProfil() {
       <View>
           <Text>Decrivez vous :</Text>
 
-          <View className="form-group">
-            <View className="form-group">
+          <View>
+            <View>
               <ModalSelector
                 data={questionList}
-                initValue="Select something yummy!"
+                initValue={questionList[selectedQuestion[0]].label}
                 onChange={(option)=>{ setSelectedQuestion(option.label)}} 
               />
             </View>
-            <View className="form-group">
+            <View>
               <TextInput
                 value={responseList[0]}
                 onChangeText={(text) => setresponseList(0, text)}
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
               />
-              {/* <input {...register("response1")} type="text" className="form-control" placeholder="Votre réponse" /> */}
             </View>
           </View>
 
-          <View className="form-group">
-            <View className="form-group">
+          <View>
+            <View>
               <ModalSelector
                 data={questionList}
-                initValue="Select something yummy!"
+                initValue={questionList[selectedQuestion[1]].label}
                 onChange={(option)=>{ setSelectedQuestion(option.label)}} 
               />
             </View>
-            <View className="form-group">
+            <View>
               <TextInput
                 value={responseList[1]}
                 onChangeText={(text) => setresponseList(1, text)}
@@ -105,15 +96,15 @@ export default function QuestionProfil() {
             </View>
           </View>
 
-          <View className="form-group">
-            <View className="form-group">
+          <View>
+            <View>
               <ModalSelector
                 data={questionList}
-                initValue="Select something yummy!"
+                initValue={questionList[selectedQuestion[2]].label}
                 onChange={(option)=>{ setSelectedQuestion(option.label)}} 
               />
             </View>
-            <View className="form-group">
+            <View>
               <TextInput
                 value={responseList[2]}
                 onChangeText={(text) => setresponseList(2, text)}
@@ -123,59 +114,40 @@ export default function QuestionProfil() {
           </View>
 
           
-          <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
-          {/* <button type="submit" className="btn btn-dark btn-lg btn-block" id="submit_button">Mettre a jour le profil</button> */}
-        
+          <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>              
       </View>
     );
   }
 
-  function getCookie(cname) {
-  let name = cname + "=";
-  let ca = document.cookie.split(';');
-  for(let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) === 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
+const getStorage = (token) => {
+  AsyncStorage.getItem(token).then((token) => {
+    return token;
+  })
 }
 
-
-
-function submit(state, user_id) {
-
-  console.log(state)
+function submit() {
 
   var send = {}
   send.question_id = [];
   send.response = [];
 
   send.user_id = user_id;
-  send.question_id.push(state.question1)
-  send.question_id.push(state.question2)
-  send.question_id.push(state.question3)
+  send.question_id.push(selectedQuestion[0])
+  send.question_id.push(selectedQuestion[1])
+  send.question_id.push(selectedQuestion[2])
 
-  send.response.push(state.response1)
-  send.response.push(state.response2)
-  send.response.push(state.response3)
+  send.response.push(responseList[0])
+  send.response.push(responseList[1])
+  send.response.push(responseList[2])
 
   console.log(send)
-
-
-
-
       //blockage du bruteforce 
   const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', "authorization": getCookie("token")},
+      headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
       body: JSON.stringify(send)
   };
-  fetch('http://localhost:3001/api/profile/question/'+getCookie("userId"), requestOptions)
+  fetch('http://localhost:3001/api/profile/question/'+getStorage("userId"), requestOptions)
       .then(async response => {
           const isJson = response.headers.get('content-type')?.includes('application/json');
           const data = isJson && await response.json();

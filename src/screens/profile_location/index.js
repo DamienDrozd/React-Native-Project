@@ -1,13 +1,13 @@
 
 
 import React, {  useEffect, useState  } from "react";
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text, Button, TextInput, Dimensions } from "react-native";
 import axios from "axios";
 // import google from "google-maps"
-import SwitchSelector from "react-native-switch-selector";
- 
-
-
+import {Slider} from '@miblanchard/react-native-slider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Geolocation from '@react-native-community/geolocation';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 
 
@@ -15,81 +15,97 @@ import SwitchSelector from "react-native-switch-selector";
 export default function Location() {
 
     const [userList, setUserList] = useState({});
-    const [longitude, setLongitude] = useState(0);
-    const [latitude, setLatitude] = useState(0);
-    const [searchRange, setSearchRange] = useState(0);
+    const [longitude, setLongitude] = useState(-122.08);
+    const [latitude, setLatitude] = useState(37.47);
+    const [searchRange, setSearchRange] = useState(50);
 
 
-  // useEffect(() => {
+  useEffect(() => {
         
 
-  //       const requestOptions = {  
-  //           method: 'GET',
-  //           headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-  //           body: JSON.stringify(userList) 
-  //       };
+        const requestOptions = {  
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
+            body: JSON.stringify(userList) 
+        };
         
-  //       axios.get('http://localhost:3001/api/profile/recherche/'+getCookie("userId"),requestOptions).then(async res1 => {
-  //         axios.get('http://localhost:3001/api/profile/localisation/'+getCookie("userId"),requestOptions).then(async res2 => {
-  //           var data = await res1.data[0];
-  //           data.longitude = await res2.data[0].longitude; 
-  //           data.latitude = await res2.data[0].lattitude;
-  //           setUserList(data); 
-  //           console.log(data)
-  //           let defaultValues = {};  
-  //           defaultValues.longitude = data.longitude;
-  //           defaultValues.latitude = data.latitude;
-  //           defaultValues.preference_gender = data.preference_gender;
-  //           defaultValues.age_min = data.age_min;
-  //           defaultValues.age_max = data.age_max;
-  //           defaultValues.searchRange = data.zone_recherche;
-  //           reset({ ...defaultValues });   
-               
-  //           document.getElementById("zone").value = document.getElementById("searchRange").value
-  //       })
-  //     })
+        axios.get('http://localhost:3001/api/profile/recherche/'+getStorage("userId"),requestOptions).then(async res1 => {
+          axios.get('http://localhost:3001/api/profile/localisation/'+getStorage("userId"),requestOptions).then(async res2 => {
+            var data = await res1.data[0];
+            data.longitude = await res2.data[0].longitude; 
+            data.latitude = await res2.data[0].lattitude;
+            setUserList(data); 
+            console.log(data)
+        }).catch(error => {
+            console.error('There was an error with api!', error);
+        });
+      }).catch(error => {
+          console.error('There was an error with api!', error);
+      });
+      getOneTimeLocation()
+      
          
-  // }, []);
+  }, []);
+
+  const getOneTimeLocation = () => {
+    console.log("getOneTimeLocation");
+    Geolocation.getCurrentPosition(
+      (position) => {
+        //getting the Longitude / latitude  from the location json
+        const currentLongitude = JSON.stringify(position.coords.longitude);
+        const currentLatitude = JSON.stringify(position.coords.latitude);
+        //Setting Longitude / latitude state
+        setLongitude(currentLongitude);
+        setLatitude(currentLatitude);
+      }
+    );
+  };
 
 
     
 return (
   <View>
-        
-    {/* <Button onClick={getLocation} className="btn btn-dark btn-lg btn-block" >Localiser</Button> */}
+    <Button onPress={getOneTimeLocation} title="Localiser" ></Button>
 
-      {/* <label>Longitude</label>
-      <input {...register("longitude")} type="text" id="longitude" class="form-control ex1" disabled></input>
+      <Text>Longitude</Text>
+      <Text>{longitude}</Text>
 
-      <label>Latitude</label>
-      <input {...register("latitude")} type="text" id="latitude" class="form-control ex1" disabled></input> */}
-    <View className="form-group">
-      <Text>Zone de recherche</Text>
-      {/* <View class="range">
-        <input {...register("searchRange", { required: true})} type="range" class="form-range" min="0" max="100" id="searchRange" />
-      </View>
-      <input type="text" id="zone" class="form-control ex1" disabled></input> */}
+      <Text>Latitude</Text>
+      <Text>{latitude}</Text>
+    <View>
+    <Text>Zone de recherche</Text>
+      <Text> {searchRange} km</Text>
+      <Slider
+        value={searchRange}
+        minimumValue={5}
+        maximumValue={1000}
+        step={5}
+        onValueChange={value => setSearchRange(value)}
+      />
     </View>
-    <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
+    <MapView
+      provider={PROVIDER_GOOGLE}
+      style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height-300}}
+      initialRegion={{
+        latitude: latitude,
+        longitude: longitude,
+        latitudeDelta: 10,
+        longitudeDelta: 10,
+      }}
+    />
+
+    <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>      
   </View>
   );
 }
 
   
 
-// function getLocation() {
-//   if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(showPosition);
-//   } else {
-//     console.error("Geolocation is not supported by this browser.");
-//   }
-// }
-
-// function showPosition(position) {
-//   document.getElementById("longitude").value = position.coords.longitude
-//   document.getElementById("latitude").value = position.coords.latitude
-//   return {latitude: position.coords.latitude, longitude: position.coords.longitude};
-// }
+const getStorage = (token) => {
+  AsyncStorage.getItem(token).then((token) => {
+    return token;
+  })
+}
 
 
 
@@ -106,18 +122,16 @@ function submit(state, userList) {
 
   const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', "authorization": getCookie("token")},
+      headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
       body: JSON.stringify(userList)
   };
-  fetch('http://localhost:3001/api/profile/recherche/'+getCookie("userId"), requestOptions)
+  fetch('http://localhost:3001/api/profile/recherche/'+getStorage("userId"), requestOptions)
       .then(async response1 => {
-        fetch('http://localhost:3001/api/profile/localisation/'+getCookie("userId"), requestOptions)
+        fetch('http://localhost:3001/api/profile/localisation/'+getStorage("userId"), requestOptions)
           .then(async response2 => {
 
           })
       })
-
-
     })
   }
 }

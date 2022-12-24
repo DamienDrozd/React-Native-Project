@@ -17,13 +17,13 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         AsyncStorage.getItem('token').then(token => {
             if (token) {
-                navigation.navigate('Characters')
+                navigation.navigate('Auth')
             }
         })
     }, []);
 
 
-    const Login = () => {
+    const log = () => {
         console.log("Login");
         console.log(email);
         console.log(password);
@@ -90,12 +90,19 @@ const Login = ({ navigation }) => {
             <TextInput
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                 value={password}
+                secureTextEntry={true}
                 onChangeText={(text) => setPassword(text)}
             />
-            <Button title="Login" onPress={() => Login()} />
+            <Button title="Login" onPress={() => log()} />
         </View >
     );
     }
+
+const getStorage = (token) => {
+  AsyncStorage.getItem(token).then((token) => {
+    return token;
+  })
+}
  
 
 export default Login; 

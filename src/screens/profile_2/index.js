@@ -1,14 +1,14 @@
 import React, {  useEffect, useState  } from "react";
 import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from 'react-native-date-picker'
 import SwitchSelector from "react-native-switch-selector";
 
 
 
 export default function Profile2() {
-
-  const [userList, setUserList] = useState([]);
+  const [userList, setUserList] = useState({});
   const [birthday, setBirthday] = useState(new Date());
   const [open, setOpen] = useState(false)
   const [gender, setGender] = useState("Male");
@@ -16,27 +16,22 @@ export default function Profile2() {
 
 
 
-  // useEffect(() => {
+  useEffect(() => {
+      
+        const requestOptions = {  
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
+            body: JSON.stringify(userList) 
+        };
         
-
-  //       const requestOptions = {  
-  //           method: 'GET',
-  //           headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-  //           body: JSON.stringify(userList) 
-  //       };
+        axios.get('http://localhost:3001/api/profile/'+getStorage("userId"),requestOptions).then(async res => {
+            var data = await res.data;
+            setUserList(data);
+        }).catch(error => {
+            console.error('There was an error with api!', error);
+        });
         
-  //       axios.get('http://localhost:3001/api/profile/'+getCookie("userId"),requestOptions).then(async res => {
-  //           var data = await res.data;
-  //           setUserList(data); 
-            
-  //           let defaultValues = {};
-  //           defaultValues.birthday = data.birthday;
-  //           defaultValues.gender = data.gender;
-  //           reset({ ...defaultValues }); 
-            
-  //       })
-        
-  // }, []);
+  }, []);
 
 
     return (
@@ -44,7 +39,7 @@ export default function Profile2() {
 
           <Text>Profil</Text>
 
-          <View className="form-group">
+          <View>
             <View>
               <Text>Date de naissance</Text>
               <DatePicker
@@ -57,8 +52,8 @@ export default function Profile2() {
               />
             </View>
           </View>
-          <View className="container">
-            <View className="form-group">
+          <View>
+            <View>
               <Text>Quel est votre sexe ?</Text>
             </View>
             <View>
@@ -85,32 +80,34 @@ export default function Profile2() {
             </View>
             
 
-            <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
+          <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>      
         </View>
 
       </View>
     );
   }
 
+const getStorage = (token) => {
+  AsyncStorage.getItem(token).then((token) => {
+    return token;
+  })
+}
+
 
 
 
 function submit(state, userList) {
-        var birthday = state.birthday;
-        var gender = state.gender;
 
 
         userList.birthday = birthday;
         userList.gender = gender;
-        console.log(userList);
-
-            //blockage du bruteforce 
+        //blockage du bruteforce 
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', "authorization": getCookie("token")},
+            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
             body: JSON.stringify(userList)
         };
-        fetch('http://localhost:3001/api/profile/'+getCookie("userId"), requestOptions)
+        fetch('http://localhost:3001/api/profile/'+getStorage("userId"), requestOptions)
             .then(async response => {
                 const isJson = response.headers.get('content-type')?.includes('application/json');
                 const data = isJson && await response.json();

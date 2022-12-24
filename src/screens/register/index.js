@@ -29,7 +29,7 @@ const Register = ({ navigation }) => {
     }, []);
 
 
-    const Register = () => {
+    const SignIn = () => {
         console.log("Register");
         console.log(email);
         console.log(password);
@@ -109,7 +109,7 @@ const Register = ({ navigation }) => {
                     onChangeText={(text) => setRepeatPassword(text)}
                 />
             </View>
-            <Button title="Register" onPress={() => Register()} />
+            <Button title="Register" onPress={() => SignIn()} />
         </View >
     );
     }

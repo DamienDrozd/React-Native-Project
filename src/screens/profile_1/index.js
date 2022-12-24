@@ -1,41 +1,35 @@
 import React, { useState, useEffect, PureComponent } from "react";
 import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 
 
 
  
 export default function Profile1() {
-
-    const [userList, setUserList] = useState([]);
+    const [userList, setUserList] = useState({});
+    const [birthday, setBirthday] = useState(new Date());
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-//     const { reset, register, handleSubmit, watch, formState: { errors }  } = useForm();
 
-//     useEffect(() => {
+    useEffect(() => {
+        const requestOptions = {  
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
+            body: JSON.stringify(userList) 
+        };
         
-
-//         const requestOptions = {  
-//             method: 'GET',
-//             headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-//             body: JSON.stringify(userList) 
-//         };
-        
-//         axios.get('http://localhost:3001/api/profile/'+getCookie("userId"),requestOptions).then(async res => {
-//             var data = await res.data;
-//             setUserList(data); 
+        axios.get('http://localhost:3001/api/profile/'+getStorage("userId"),requestOptions).then(async res => {
+            var data = await res.data;
+            setUserList(data); 
             
-//             let defaultValues = {};
-//             defaultValues.firstname = data.firstname;
-//             defaultValues.lastname = data.lastname;
-//             reset({ ...defaultValues }); 
-            
-//         })
+        }).catch(error => {
+            console.error('There was an error with api!', error);
+        });
         
-//   }, []);
+  }, []);
 
 
-//     const onSubmit = (data) => {submit(data, userList)}
     
     return (
         <View>
@@ -43,7 +37,7 @@ export default function Profile1() {
 
             <Text>Création de profil</Text>
 
-            <View className="form-group">
+            <View>
                 <Text>Prenom</Text>
                 <TextInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -52,7 +46,7 @@ export default function Profile1() {
                 />
             </View>
 
-            <View className="form-group">
+            <View>
                 <Text>Prenom</Text>
                 <TextInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -61,9 +55,15 @@ export default function Profile1() {
                 />
             </View>
 
-            <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
+            <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>      
         </View>
     );
+}
+
+const getStorage = (token) => {
+  AsyncStorage.getItem(token).then((token) => {
+    return token;
+  })
 }
 
 
@@ -78,10 +78,10 @@ function submit(state, userList) {
             //blockage du bruteforce 
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', "authorization": getCookie("token")},
+            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
             body: JSON.stringify(userList)
         };
-        fetch('http://localhost:3001/api/profile/'+getCookie("userId"), requestOptions)
+        fetch('http://localhost:3001/api/profile/'+getStorage("userId"), requestOptions)
             .then(async response => {
                 const isJson = response.headers.get('content-type')?.includes('application/json');
                 const data = isJson && await response.json();

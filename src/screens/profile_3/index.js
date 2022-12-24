@@ -4,52 +4,39 @@ import React, {  useEffect, useState  } from "react";
 import { View, Text, Button, TextInput } from "react-native";
 import axios from "axios";
 import SwitchSelector from "react-native-switch-selector";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
  
 export default function Recherche() {
-
-    const [age_min, setAge_min] = useState(0);
-    const [age_max, setAge_max] = useState(0);
-    const [preference , setPreference] = useState("")
+  const [userList, setUserList] = useState({});
+  const [age_min, setAge_min] = useState(0);
+  const [age_max, setAge_max] = useState(0);
+  const [preference , setPreference] = useState("")
 
     
 
-  // useEffect(() => {
+  useEffect(() => {
         
 
-  //       const requestOptions = {  
-  //           method: 'GET',
-  //           headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-  //           body: JSON.stringify(userList) 
-  //       };
+        const requestOptions = {  
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
+            body: JSON.stringify(userList) 
+        };
         
-  //       axios.get('http://localhost:3001/api/profile/recherche/'+getCookie("userId"),requestOptions).then(async res1 => {
-  //         axios.get('http://localhost:3001/api/profile/localisation/'+getCookie("userId"),requestOptions).then(async res2 => {
-  //           var data = await res1.data[0];
-  //           data.longitude = await res2.data[0].longitude; 
-  //           data.latitude = await res2.data[0].lattitude;
-  //           setUserList(data); 
-  //           console.log(data)
-  //           let defaultValues = {};  
-  //           defaultValues.longitude = data.longitude;
-  //           defaultValues.latitude = data.latitude;
-  //           defaultValues.preference_gender = data.preference_gender;
-  //           defaultValues.age_min = data.age_min;
-  //           defaultValues.age_max = data.age_max;
-  //           defaultValues.searchRange = data.zone_recherche;
-  //           reset({ ...defaultValues });   
-               
-  //           document.getElementById("zone").value = document.getElementById("searchRange").value
-  //       })
-  //     })
+        axios.get('http://localhost:3001/api/profile/recherche/'+getStorage("userId"),requestOptions).then(async res1 => {
+          axios.get('http://localhost:3001/api/profile/localisation/'+getStorage("userId"),requestOptions).then(async res2 => {
+            var data = await res1.data[0];
+            setUserList(data); 
+            console.log(data)
+          }).catch(error => {
+              console.error('There was an error with api!', error);
+          });
+        }).catch(error => {
+            console.error('There was an error with api!', error);
+        });
          
-  // }, []);
-
-
-  // document.getElementById("searchRange").value
-  // if(document.getElementById("searchRange") !== null){
-  //   document.getElementById("zone").value = document.getElementById("searchRange").value
-  // }
-
+  }, []);
     
     return (
 
@@ -77,11 +64,11 @@ export default function Recherche() {
           />
         </View>
 
-        <View className="form-group">
+        <View>
           <Text>
             Preférence sexuelle
           </Text>
-          <View className="container">
+          <View>
           <SwitchSelector
             initial={0}
             onPress={value => setPreference({ gender: value })}
@@ -97,42 +84,40 @@ export default function Recherche() {
         </View>
 
           
-        <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
-      </View>
+      <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>      
+    </View>
   </View>
   );
 }
 
   
 
-
+const getStorage = (token) => {
+  AsyncStorage.getItem(token).then((token) => {
+    return token;
+  })
+}
 
 
 
 
 function submit(state, userList) {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position)=>{
-      userList.preference_gender = state.preference_gender;
-      userList.age_min = state.age_min;
-      userList.age_max = state.age_max;
-      console.log(userList)
+  userList.preference_gender = preference;
+  userList.age_min = age_min;
+  userList.age_max = age_max;
 
   const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', "authorization": getCookie("token")},
+      headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
       body: JSON.stringify(userList)
   };
-  fetch('http://localhost:3001/api/profile/recherche/'+getCookie("userId"), requestOptions)
-      .then(async response1 => {
-        fetch('http://localhost:3001/api/profile/localisation/'+getCookie("userId"), requestOptions)
-          .then(async response2 => {
+  fetch('http://localhost:3001/api/profile/recherche/'+getStorage("userId"), requestOptions)
+    .then(async response1 => {
+      fetch('http://localhost:3001/api/profile/localisation/'+getStorage("userId"), requestOptions)
+        .then(async response2 => {
 
-          })
-      })
-
-
+        })
     })
-  }
+
 }
     

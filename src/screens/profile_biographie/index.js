@@ -1,42 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 
 
  
 export default function Biographie() {
-    const [biographie, setBiographie] = useState([]);
+  const [userList, setUserList] = useState({});
+  const [biographie, setBiographie] = useState([]);
 
-  //   useEffect(() => {
+    useEffect(() => {
+        const requestOptions = {  
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
+            body: JSON.stringify(userList) 
+        };
         
-
-  //       const requestOptions = {  
-  //           method: 'GET',
-  //           headers: { 'Content-Type': 'application/json', "authorization": getCookie("token") },
-  //           body: JSON.stringify(userList) 
-  //       };
+        axios.get('http://localhost:3001/api/profile/'+getStorage("userId"),requestOptions).then(async res => {
+            var data = await res.data;
+            setUserList(data); 
+        }).catch(error => {
+            console.error('There was an error with api!', error);
+        });
         
-  //       axios.get('http://localhost:3001/api/profile/'+getCookie("userId"),requestOptions).then(async res => {
-  //           var data = await res.data;
-  //           setUserList(data); 
-            
-  //           let defaultValues = {};
-  //           defaultValues.bio = data.bio;
-  //           reset({ ...defaultValues }); 
-            
-  //       })
-        
-  // }, []);
+  }, []);
 
 
 
     return (
       <View>        
-          <Text className="title">Biographie</Text>
+          <Text>Biographie</Text>
 
-          <View className="form-group">
+          <View>
             <TextInput
               multiline
               numberOfLines={10}
@@ -47,15 +45,18 @@ export default function Biographie() {
               
             />
           </View>
-          <Button title="Submit" onPress={() => submit()} >Mettre a jour le profil</Button>
+          <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>
       </View>
     );
   }
 
+const getStorage = (token) => {
+  AsyncStorage.getItem(token).then((token) => {
+    return token;
+  })
+}
 
-function submit(state, userList) {
-        var bio = state.bio;
-
+function submit() {
 
         userList.bio = bio;
         console.log(userList)
@@ -63,10 +64,10 @@ function submit(state, userList) {
             //blockage du bruteforce 
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', "authorization": getCookie("token")},
+            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
             body: JSON.stringify(userList)
         };
-        fetch('http://localhost:3001/api/profile/'+getCookie("userId"), requestOptions)
+        fetch('http://localhost:3001/api/profile/'+getStorage("userId"), requestOptions)
             .then(async response => {
                 const isJson = response.headers.get('content-type')?.includes('application/json');
                 const data = isJson && await response.json();
