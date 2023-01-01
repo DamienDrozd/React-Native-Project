@@ -25,24 +25,25 @@ const Routes = () => {
   
 
   useEffect(() => {
-     getStorage('userId').then(userId => {
-      getStorage('token').then(token => {
-        
+    AsyncStorage.getItem('userId').then(userId => {
+      AsyncStorage.getItem('token').then(token => {
         console.log("userId : ", userId);
         console.log("token : ", token);
         const API_LINK = process.env['API_LINK'] + "/api/auth/protected";
         if (userId == null || token == null || userId == undefined || token == undefined) {
+          console.log("User not authenticated");
           setLoading(false);
           navigation.navigate('Public');
+          return;
         }
         axios.get(API_LINK, {
-            userId: userId, 
-            token: token
+            headers: { authorization : token },
+            body: {userId: userId}
         })
         .then(response => {
-          console.log("User authenticated : ", response.data);
+          console.log("User authenticated : ", response);
           setLoading(false);
-          navigation.navigate('Auth' );
+          // navigation.navigate('Auth' );
         }).catch(error => {
           console.log("User not authenticated : ", error);
           setLoading(false);
@@ -69,10 +70,5 @@ const Routes = () => {
   );
 };
 
-const getStorage = async (Item) => {
-  AsyncStorage.getItem(Item).then((token) => {
-    return token;
-  })
-}
 
 export default Routes;
