@@ -1,16 +1,15 @@
 import React, {useEffect} from 'react';
-
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {View, Text, Button, SafeAreaView, ActivityIndicator} from 'react-native';
-import { useNavigation} from '@react-navigation/native';
+
+
 
 import Login from '../screens/login';
 import Register from '../screens/register';
 const Stack = createNativeStackNavigator();
 
 const PublicStack = () => {
-  // const navigation = useNavigation();
-  
+
  
 
   function DetailsScreen({navigation}) {

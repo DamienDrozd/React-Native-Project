@@ -6,17 +6,16 @@ import { View, Text, Image, StyleSheet, TextInput, Button, TouchableOpacity } fr
 import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import Update_Button from "../../components/Update_User";
 
 
 
 
  
-export default function QuestionProfil() {
+export default function QuestionProfil({ route, navigation }) {
+    const [user, setUser] = useState(route.params.user)
     let index = 0;
-    const [userList, setUserList] = useState({});
     const [questionList, setquestionList] = useState([{ key: index++, label: "question 1 ?"},{ key: index++, label: "question 2 ?"},{ key: index++, label: "question 3 ?"}]);
-    const [responseList, setresponseList] = useState(["reponse 1","reponse 2","reponse 3"]);
-    const [selectedQuestion, setSelectedQuestion] = useState([1,2,0]);
 
     useEffect(() => {
       var requestOptions = {  
@@ -31,32 +30,9 @@ export default function QuestionProfil() {
       }).catch(error => {
           console.error('There was an error with api!', error);
       });
-  
-      requestOptions = {  
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
-          body: JSON.stringify(questionList)  
-      };
-      axios.get('http://localhost:3001/api/profile/question/'+getStorage("userId"),requestOptions).then(async res => {
-        var data = await res.data;      
-        
-        // setresponseList() = data[0].reponse; 
-        // setresponseList() = data[1].reponse; 
-        // ssetresponseList() = data[2].reponse; 
-
-        // questionList() = data[0].question_id; 
-        // questionList() = data[1].question_id; 
-        // questionList() = data[2].question_id;  
-      }).catch(error => {
-          console.error('There was an error with api!', error);
-      });
         
   }, []);
-
   
-
-
-    
     return (
       
       <View>
@@ -66,14 +42,22 @@ export default function QuestionProfil() {
             <View>
               <ModalSelector
                 data={questionList}
-                initValue={questionList[selectedQuestion[0]].label}
-                onChange={(option)=>{ setSelectedQuestion(option.label)}} 
+                initValue={questionList[user.question_id[0]].label}
+                onChange={(option)=>{
+                    var newUser = user;
+                    newUser.question_id[0] = option.label;
+                    setUser(newUser)
+                }}
               />
             </View>
             <View>
               <TextInput
-                value={responseList[0]}
-                onChangeText={(text) => setresponseList(0, text)}
+                value={user.response[0]}
+                onChangeText={(text) => {
+                    var newUser = user;
+                    newUser.response[0] = text;
+                    setUser(newUser);
+                }}
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
               />
             </View>
@@ -83,14 +67,22 @@ export default function QuestionProfil() {
             <View>
               <ModalSelector
                 data={questionList}
-                initValue={questionList[selectedQuestion[1]].label}
-                onChange={(option)=>{ setSelectedQuestion(option.label)}} 
+                initValue={questionList[user.question_id[1]].label}
+                onChange={(option)=>{
+                    var newUser = user;
+                    newUser.question_id[1] = option.label;
+                    setUser(newUser)
+                }}
               />
             </View>
             <View>
               <TextInput
-                value={responseList[1]}
-                onChangeText={(text) => setresponseList(1, text)}
+                value={user.response[1]}
+                onChangeText={(text) => {
+                    var newUser = user;
+                    newUser.response[1] = text;
+                    setUser(newUser);
+                }}
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
               />            
             </View>
@@ -100,21 +92,29 @@ export default function QuestionProfil() {
             <View>
               <ModalSelector
                 data={questionList}
-                initValue={questionList[selectedQuestion[2]].label}
-                onChange={(option)=>{ setSelectedQuestion(option.label)}} 
+                initValue={questionList[user.question_id[2]].label}
+                onChange={(option)=>{
+                    var newUser = user;
+                    newUser.question_id[2] = option.label;
+                    setUser(newUser)
+                }}
               />
             </View>
             <View>
               <TextInput
-                value={responseList[2]}
-                onChangeText={(text) => setresponseList(2, text)}
+                value={user.response[2]}
+                onChangeText={(text) => {
+                    var newUser = user;
+                    newUser.response[2] = text;
+                    setUser(newUser);
+                }}
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
               />   
             </View>
           </View>
 
           
-          <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>              
+          <Update_Button user={user}/>     
       </View>
     );
   }
@@ -125,38 +125,6 @@ const getStorage = (token) => {
   })
 }
 
-function submit() {
 
-  var send = {}
-  send.question_id = [];
-  send.response = [];
-
-  send.user_id = user_id;
-  send.question_id.push(selectedQuestion[0])
-  send.question_id.push(selectedQuestion[1])
-  send.question_id.push(selectedQuestion[2])
-
-  send.response.push(responseList[0])
-  send.response.push(responseList[1])
-  send.response.push(responseList[2])
-
-  console.log(send)
-      //blockage du bruteforce 
-  const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
-      body: JSON.stringify(send)
-  };
-  fetch('http://localhost:3001/api/profile/question/'+getStorage("userId"), requestOptions)
-      .then(async response => {
-          const isJson = response.headers.get('content-type')?.includes('application/json');
-          const data = isJson && await response.json();
-          alert(data.message)
-      })
-      .catch(error => {
-          console.error('There was an error!', error);
-      });
-  } 
-  
 
 

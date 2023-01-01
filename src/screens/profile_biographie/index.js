@@ -3,30 +3,14 @@ import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import Update_Button from "../../components/Update_User";
 
 
 
 
  
-export default function Biographie() {
-  const [userList, setUserList] = useState({});
-  const [biographie, setBiographie] = useState([]);
-
-    useEffect(() => {
-        const requestOptions = {  
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
-            body: JSON.stringify(userList) 
-        };
-        
-        axios.get('http://localhost:3001/api/profile/'+getStorage("userId"),requestOptions).then(async res => {
-            var data = await res.data;
-            setUserList(data); 
-        }).catch(error => {
-            console.error('There was an error with api!', error);
-        });
-        
-  }, []);
+export default function Biographie({ route, navigation }) {
+    const [user, setUser] = useState(route.params.user)
 
 
 
@@ -39,13 +23,17 @@ export default function Biographie() {
               multiline
               numberOfLines={10}
               // style={styles.input}
-              onChangeText={(text) => setBiographie(text)}
-              value={biographie}
+              onChangeText={(text) => {
+                  var newUser = user;
+                  newUser.biographie = text;
+                  setUser(newUser)
+              }}
+              value={user.biographie}
               placeholder="Entrez votre biographie"
               
             />
           </View>
-          <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>
+          <Update_Button user={user}/>  
       </View>
     );
   }
@@ -56,24 +44,3 @@ const getStorage = (token) => {
   })
 }
 
-function submit() {
-
-        userList.bio = bio;
-        console.log(userList)
- 
-            //blockage du bruteforce 
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
-            body: JSON.stringify(userList)
-        };
-        fetch('http://localhost:3001/api/profile/'+getStorage("userId"), requestOptions)
-            .then(async response => {
-                const isJson = response.headers.get('content-type')?.includes('application/json');
-                const data = isJson && await response.json();
-                alert(data.message)
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
-    } 

@@ -27,6 +27,7 @@ const Settings = ({ navigation }) => {
                 Settings
             </Text>
             <Button title="Logout" onPress={Logout} />
+            <Button title="Profile settings" onPress={() => navigation.navigate('Profile')} />
         </View >
     );
     }

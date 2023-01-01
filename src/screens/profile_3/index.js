@@ -6,37 +6,12 @@ import axios from "axios";
 import SwitchSelector from "react-native-switch-selector";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import Update_Button from "../../components/Update_User";
+
+
  
-export default function Recherche() {
-  const [userList, setUserList] = useState({});
-  const [age_min, setAge_min] = useState(0);
-  const [age_max, setAge_max] = useState(0);
-  const [preference , setPreference] = useState("")
-
-    
-
-  useEffect(() => {
-        
-
-        const requestOptions = {  
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
-            body: JSON.stringify(userList) 
-        };
-        
-        axios.get('http://localhost:3001/api/profile/recherche/'+getStorage("userId"),requestOptions).then(async res1 => {
-          axios.get('http://localhost:3001/api/profile/localisation/'+getStorage("userId"),requestOptions).then(async res2 => {
-            var data = await res1.data[0];
-            setUserList(data); 
-            console.log(data)
-          }).catch(error => {
-              console.error('There was an error with api!', error);
-          });
-        }).catch(error => {
-            console.error('There was an error with api!', error);
-        });
-         
-  }, []);
+export default function Recherche({ route, navigation }) {
+    const [user, setUser] = useState(route.params.user)
     
     return (
 
@@ -47,9 +22,13 @@ export default function Recherche() {
           </Text>
           <TextInput
             style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            value={age_min}
+            value={user.age_min}
             keyboardType="numeric"
-            onChangeText={(text) => setAge_min(text)}
+            onChangeText={(text) => {
+                var newUser = user;
+                newUser.age_min = text;
+                setUser(newUser)
+            }}
           />
         </View>
         <View>
@@ -58,9 +37,13 @@ export default function Recherche() {
           </Text>
           <TextInput
             style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-            value={age_max}
+            value={user.age_max}
             keyboardType="numeric"
-            onChangeText={(text) => setAge_max(text)}
+            onChangeText={(text) => {
+                var newUser = user;
+                newUser.age_max = text;
+                setUser(newUser)
+            }}
           />
         </View>
 
@@ -71,7 +54,11 @@ export default function Recherche() {
           <View>
           <SwitchSelector
             initial={0}
-            onPress={value => setPreference({ gender: value })}
+            onPress={value => {
+                var newUser = user;
+                newUser.preference_gender = value;
+                setUser(newUser)
+            }}
             hasPadding
             options={[
               { label: "Homme", value: "Male"}, 
@@ -84,7 +71,7 @@ export default function Recherche() {
         </View>
 
           
-      <Button title="Mettre a jour le profil" onPress={() => submit()} ></Button>      
+      <Update_Button user={user}/>
     </View>
   </View>
   );
@@ -98,26 +85,3 @@ const getStorage = (token) => {
   })
 }
 
-
-
-
-function submit(state, userList) {
-  userList.preference_gender = preference;
-  userList.age_min = age_min;
-  userList.age_max = age_max;
-
-  const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', "authorization": getStorage("token")},
-      body: JSON.stringify(userList)
-  };
-  fetch('http://localhost:3001/api/profile/recherche/'+getStorage("userId"), requestOptions)
-    .then(async response1 => {
-      fetch('http://localhost:3001/api/profile/localisation/'+getStorage("userId"), requestOptions)
-        .then(async response2 => {
-
-        })
-    })
-
-}
-    

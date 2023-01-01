@@ -1,11 +1,9 @@
-import React, { useState, useEffect, PureComponent } from "react";
-import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 import {API_LINK} from '@env';
-// API_LINK = "http://"
-console.log("API_LINK : ", API_LINK);
 
 import Logo from "../../components/Logo";
 import Title from "../../components/Title";
@@ -23,7 +21,7 @@ const Register = ({ navigation }) => {
     useEffect(() => {
         AsyncStorage.getItem('token').then(token => {
             if (token) {
-                navigation.navigate('Characters')
+                navigation.navigate('Auth')
             }
         })
     }, []);
@@ -45,31 +43,28 @@ const Register = ({ navigation }) => {
         if (email.length < 5 || password.length < 8 || password != repeatPassword || !email.toLowerCase().match(email_regex)) {
             alert("erreur de saisie");
         } else {
-            // const API_LINK = process.env['API_LINK'] + "/api/auth/signup";
-            // const API_LINK = "http://localhost:3002/api/auth/signup";
-            const API_LINK = "https://login.hikkary.com/users/login";
-            console.log("API_LINK : ", API_LINK);
+            const API_LINK = process.env['API_LINK'] + "/api/auth/signup";
             console.log("envoi de la requête");
-            axios({
-            method: 'post',
-            url: API_LINK,
-            headers: { "Content-Type": "application/json" },
-            data: {
-                username : email, 
-                password: password,
-            },
+            axios.post(API_LINK, {
+                email: email, 
+                password: password
             })
             .then(response => {
                 console.log(response);
                 console.log("response api : ", response.data);
-                AsyncStorage.setItem('token', response.headers['x-access-token']).then(() => {
-                    console.log("Register success");
-                    navigation.navigate("Profile");
+                AsyncStorage.setItem('token', response.data['token']).then(() => {
+                    AsyncStorage.setItem('userId', response.data['userId'].toString()).then(() => {
+                        alert("Register success");
+                        navigation.navigate("Profile");
+                    }).catch((error) => {
+                        alert("storage error : ", error);
+                    });
                 }).catch((error) => {
-                    console.log("storage error : ", error);
+                    alert("storage error : ", error);
                 });
+                
             }).catch(error => {
-                console.log("api error : ", error);
+                alert("api error : ", error);
             });
         }
         
@@ -87,6 +82,7 @@ const Register = ({ navigation }) => {
                 style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                 value={email}
                 onChangeText={(text) => setEmail(text)}
+                keyboardType="email-address"
             />
 
             <View>
@@ -110,6 +106,7 @@ const Register = ({ navigation }) => {
                 />
             </View>
             <Button title="Register" onPress={() => SignIn()} />
+            <Button title="Login" onPress={() => navigation.navigate('Login')} />
         </View >
     );
     }
