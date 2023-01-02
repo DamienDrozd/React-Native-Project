@@ -40,8 +40,8 @@ const Swipe_Card = (props) => {
             <View>
                 {User.interet.map((interet) => {
                     return (
-                        <View key={interet}>
-                            <Text>{interet}</Text>
+                        <View key={interet.name}>
+                            <Text>{interet.name}</Text>
                         </View>
                     )
                 })}

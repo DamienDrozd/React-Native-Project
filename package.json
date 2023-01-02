@@ -33,6 +33,7 @@
     "react-native-screens": "^3.18.2",
     "react-native-swipe-gestures": "^1.0.5",
     "react-native-switch-selector": "^2.3.0",
+    "socket.io-client": "^4.5.4",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {

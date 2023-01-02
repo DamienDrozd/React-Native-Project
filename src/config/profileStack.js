@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaView, ActivityIndicator} from 'react-native';
+import { View, Text } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
+import NewHoc from "../components/Profile_Hoc";
+
 
 import Profile1 from "../screens/profile_1"
 import Profile2 from "../screens/profile_2"
@@ -20,17 +24,21 @@ const PublicStack = () => {
   const [loading, setLoading] = React.useState(true);
   const [user, setUser] = useState({"birthday": new Date, "interet":[], "longitude" : 0, "latitude" : 0, "searchRange" : 0, "question_id": [1,2,0], "response": ["reponse 1","reponse 2","reponse 3"]});
 
-    useEffect(() => {
+
+    useEffect(async () => {
+        let token = await AsyncStorage.getItem("token");
+        let userId = await AsyncStorage.getItem("userId");
         const requestOptions = {  
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
-            body: JSON.stringify(user) 
+            headers: { 'Content-Type': 'application/json', "authorization": token },
         };
-        
-        axios.get('http://localhost:3001/api/profile/'+getStorage("userId"),requestOptions).then(async res => {
-            var data = await res.data;
-            setUser(data); 
-            
+        const API_LINK = process.env['API_LINK'] + "/api/profile/"+userId;
+        console.log("API_LINK : ", API_LINK);
+        console.log("requestOptions : ", requestOptions);
+        axios.get(API_LINK ,requestOptions).then(res => {
+            var data = res.data;
+            console.log("User authenticated : ", data);
+            // setUser(data); 
+            setLoading(false)
         }).catch(error => {
             console.error('There was an error with api!', error);
         });
@@ -46,7 +54,7 @@ const PublicStack = () => {
   }
 
   return (
-      <Stack.Navigator initialRouteName="Profile2" screenOptions={{headerShown: false}} >
+      <Stack.Navigator initialRouteName="Profile1" screenOptions={{headerShown: false}} >
         <Stack.Screen name="Profile1" component={Profile1} initialParams={{user : user}}/>
         <Stack.Screen name="Profile2" component={Profile2} initialParams={{user : user}}/>
         <Stack.Screen name="Profile3" component={Profile3} initialParams={{user : user}}/>

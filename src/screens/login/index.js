@@ -41,7 +41,7 @@ const Login = ({ navigation }) => {
                 AsyncStorage.setItem('token', response.data['token']).then(() => {
                     AsyncStorage.setItem('userId', response.data['userId'].toString()).then(() => {
                         alert("Register success");
-                        navigation.navigate("Home");
+                        navigation.navigate("Auth");
                     }).catch((error) => {
                         alert("storage error : ", error);
                     });

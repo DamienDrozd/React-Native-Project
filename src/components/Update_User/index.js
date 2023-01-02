@@ -16,6 +16,8 @@ const Update_Button = (props) => {
     </View>);
 }
 
+
+
 const getStorage = (token) => {
   AsyncStorage.getItem(token).then((token) => {
     return token;
