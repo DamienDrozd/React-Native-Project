@@ -1,47 +1,38 @@
 import React, { useState } from 'react';
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, TextInput } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const MessageInput = ({target_id,socket}) => {
   const [value, setValue] = useState('');
 
-  const submitForm = (e) => {
-    e.preventDefault();
-    var user_id = getCookie("userId");
-    var token = getCookie("token");
-    var message = {value : value, user_id : user_id, target_id : target_id, token : token}
-    socket.emit('message', message);
-    setValue('');
+  const submitMessage = () => {
+    AsyncStorage.getItem('userId').then(userId => {
+      AsyncStorage.getItem('token').then(token => {
+        let message = {value : value, user_id : userId, target_id : target_id, token : token}
+        socket.emit('message', message);
+        socket.onopen = () => {
+          socket.send('message', message);
+        };
+        setValue('');
+      })
+    })
   }; 
   
 
   return (
-    <form onSubmit={submitForm}>
-      <input className="newMessage"
-        autoFocus
+    <View>
+      <TextInput
         value={value}
-        placeholder="Type your message"
-        onChange={(e) => {
-          setValue(e.currentTarget.value);
+        onChangeText={(text) => {
+            setValue(text);
         }}
       />
-    </form>
+      <Button title="Post message" onPress={() => submitMessage ()} ></Button>   
+    </View>
   );
 };
 
-function getCookie(cname) {
-  let name = cname + "=";
-  let ca = document.cookie.split(';');
-  for(let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) === 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
+
 
 export default MessageInput;

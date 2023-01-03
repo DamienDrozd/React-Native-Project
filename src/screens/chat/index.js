@@ -5,7 +5,7 @@ import axios from "axios";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MessageList from '../../components/Message_List';
 import MessageInput from '../../components/Message_Input';
-// import {io} from "socket.io-client";
+// import io from "socket.io-client";
 const ENDPOINT = process.env['API_LINK']
 
 // import Message from "./messaging.component"
@@ -27,9 +27,23 @@ export default function Chat({ route, navigation }) {
         //         return () => newSocket.close(); 
         //     })
         // })
-        const newSocket = new WebSocket(ENDPOINT);
-        setSocket(newSocket);
-        return () => newSocket.close(); 
+        // const newSocket = new WebSocket(ENDPOINT);
+        // setSocket(newSocket);
+        // return () => newSocket.close(); 
+        const socket = io('http://localhost:3000');
+        socket.on('connect', () => {
+            console.log('connected');
+        });
+        socket.on('disconnect', () => {
+            console.log('disconnected');
+        });
+        socket.on('message', (message) => {
+            console.log(message);
+        });
+        socket.on('error', (error) => {
+            console.log(error);
+        });
+        setSocket(socket);
     }, [setSocket]);
 
 
@@ -41,8 +55,7 @@ export default function Chat({ route, navigation }) {
             { socket ? (
                 <View className="chat-container">
                     <MessageList target_id={contact.contact_id} socket={socket} />
-                {/* <MessageInput target_id={contact.contact_id}  socket={socket} /> */}
-                    <Text>Connected to socket</Text>
+                    <MessageInput target_id={contact.contact_id}  socket={socket} />
                 </View>
             ) : (
                 <Text>Not Connected</Text>

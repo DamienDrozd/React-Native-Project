@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaView, ActivityIndicator} from 'react-native';
 import { View, Text } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import NewHoc from "../components/Profile_Hoc";
 

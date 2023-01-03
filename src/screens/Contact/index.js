@@ -6,16 +6,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
 // import Message from "./messaging.component"
-import Chat from "../Chat"
-
-
-
-
-
+import Chat from "../chat"
  
 export default function Contact() {
-
-
     const [contactList, setContactList] = useState([]);
 
     useEffect(() => {
@@ -31,18 +24,12 @@ export default function Contact() {
                     // console.log(res);
                     var data =  res.data; 
                     console.log(data);
-                    
                     setContactList(data); 
                 })
             })
         }) 
-        
-        
-        
     }, []);
 
-
-    
 
     function ContactList({navigation}) {
         return (

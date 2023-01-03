@@ -31,13 +31,24 @@ const PublicStack = ({navigation}) => {
             body: {userId: userId} 
         })
         .then(response => {
-          console.log("User authenticated : ", response);
-          setLoading(false);
-          navigation.navigate('Auth' );
+          if (response == null || response == undefined || response == "") {
+            console.log("User not authenticated : ", response);
+            Logout();
+            setLoading(false);
+            console.log("Natvigate to : Public");
+            navigation.navigate('Public');
+            return;
+          } else {
+            console.log("User authenticated : ", response);
+            setLoading(false);
+            console.log("Natvigate to : Auth");
+            navigation.navigate('Auth' );
+          }
         }).catch(error => {
           console.log("User not authenticated : ", error);
           Logout();
           setLoading(false);
+          console.log("Natvigate to : Public");
           navigation.navigate('Public');
         });
       });
@@ -55,7 +66,6 @@ const PublicStack = ({navigation}) => {
     AsyncStorage.getAllKeys().then((keys) => {
         AsyncStorage.multiRemove(keys).then(() => {
             console.log("Logout success");
-            navigation.navigate("Public");
         }).catch((error) => {
             console.log("storage error : ", error);
         });

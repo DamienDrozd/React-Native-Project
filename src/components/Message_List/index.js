@@ -9,12 +9,71 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 function MessageList({target_id, socket}) {
   const [messages, setMessages] = useState({});
 
-  function Message_user(params) {
+  
+  
+
+  useEffect(() => {
+     AsyncStorage.getItem('userId').then(userId => {
+        AsyncStorage.getItem('token').then(token => {
+            console.log("userId : ", userId);
+            console.log("token : ", token);
+            const API_LINK = process.env['API_LINK'] + "/api/chat";
+            let requestOptions = {  
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', "authorization": token, "user_id":userId, "target_id":target_id  },
+            };
+            axios.get(API_LINK,requestOptions).then(res => {
+                console.log(res);
+                let data = res.data;
+                setMessages(data);
+                console.log(data);
+            })
+
+            const messageListener = (message) => {
+                setMessages((prevMessages) => {
+                    const newMessages = {...prevMessages};
+                    if((message.user_id === userId && message.target_id === target_id) || ((message.user_id) === target_id.toString() &&  (message.target_id).toString() === userId)){
+                        // console.log("test")
+                        newMessages[message.id] = message;
+                    }
+                    return newMessages;
+                });
+            };
+            socket.onmessage = (e) => {
+              // a message was received
+              console.log(e);
+            };
+            socket.on('message', messageListener);
+            let Users = {user_id : user_id, target_id : target_id, token : token}
+            console.log(Users)
+            socket.emit('getMessages', Users);
+            return () => {
+              socket.off('message', messageListener);
+            };
+            
+        })
+    })
+  }, [target_id,socket]);
+
+  return (
+    <View className="message-list">
+        
+      {[...Object.values(messages)]
+        .sort((a, b) => a.time - b.time)
+        .map((message) => (
+          <View key={message.id}>
+            <Message_user message={message} />
+          </View>
+        ))
+      }
+    </View>
+  );
+}
+
+const Message_user = (params) => {
     const message = params.message
     const message_User = message.user_id;
-    const user_id = getCookie("userId")
-    // console.log(user_id);
-    // console.log(message_User);
+    const user_id = AsyncStorage.getItem('userId');
   
     if (user_id === message_User.toString()) {
         return (
@@ -39,70 +98,7 @@ function MessageList({target_id, socket}) {
             </View>
         );
     }
-    
-    return <p>Here, You can write user template. You are a User.</p>;
   }
-  
-
-  useEffect(() => {
-     AsyncStorage.getItem('userId').then(userId => {
-        AsyncStorage.getItem('token').then(token => {
-            console.log("userId : ", userId);
-            console.log("token : ", token);
-            const API_LINK = process.env['API_LINK'] + "/api/chat";
-            var requestOptions = {  
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json', "authorization": getCookie("token"), "user_id":getCookie("userId"), "target_id":target_id  },
-            };
-            axios.get(API_LINK,requestOptions).then(res => {
-                console.log(res);
-                var data = res.data;
-                setMessages(data);
-                // console.log(data);
-            })
-
-            const messageListener = (message) => {
-                setMessages((prevMessages) => {
-                    const newMessages = {...prevMessages};
-                    if((message.user_id === getCookie("userId") && message.target_id === target_id) || ((message.user_id) === target_id.toString() &&  (message.target_id).toString() === getCookie("userId"))){
-                        // console.log("test")
-                        newMessages[message.id] = message;
-                    }
-                    return newMessages;
-                });
-            };
-
-  
-    
-  
-            // socket.on('message', messageListener);
-            // var user_id = getCookie("userId");
-            // var token = getCookie("token");
-            // var Users = {user_id : user_id, target_id : target_id, token : token}
-            // // console.log(Users)
-            // socket.emit('getMessages', Users);
-
-            // return () => {
-            //   socket.off('message', messageListener);
-            // };
-        })
-    })
-  }, [target_id,socket]);
-
-  return (
-    <View className="message-list">
-        
-      {[...Object.values(messages)]
-        .sort((a, b) => a.time - b.time)
-        .map((message) => (
-          <View key={message.id}>
-            <Message_user message={message} />
-          </View>
-        ))
-      }
-    </View>
-  );
-}
 
 
 
