@@ -1,11 +1,13 @@
-import React, { useState, useEffect, PureComponent } from "react";
-import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
+import React from "react";
+import { View, Text, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from "react-i18next";
 
-
+import "../../config/translationInit";
 
 
 const Settings = ({ navigation }) => { 
+    const { t, i18n } = useTranslation();
 
     const Logout = () => {
         AsyncStorage.getAllKeys().then((keys) => {
@@ -23,11 +25,19 @@ const Settings = ({ navigation }) => {
 
     return (
         <View>
-            <Text>
-                Settings
+            <Text> 
+                {t("settings.title")}
             </Text>
-            <Button title="Logout" onPress={Logout} />
-            <Button title="Profile settings" onPress={() => navigation.navigate('Profile')} />
+            <Button title={t("settings.logout")} onPress={Logout} />
+            <Button title={t("settings.profile_edit")} onPress={() => navigation.navigate('Profile')} />
+            <Button
+                title={t("settings.language_fr")}
+                onPress={() => i18n.changeLanguage("fr")}
+            />
+            <Button
+                title={t("settings.language_en")}
+                onPress={() => i18n.changeLanguage("en")}
+            />
         </View >
     );
     }

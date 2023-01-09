@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FieldInput, MessageButton, MessageButtonText, ViewCustom } from './styles';
 
 
 const MessageInput = ({target_id,socket}) => {
@@ -21,15 +22,17 @@ const MessageInput = ({target_id,socket}) => {
   
 
   return (
-    <View>
-      <TextInput
+    <ViewCustom>
+      <FieldInput
         value={value}
         onChangeText={(text) => {
             setValue(text);
         }}
       />
-      <Button title="Post message" onPress={() => submitMessage ()} ></Button>   
-    </View>
+      <MessageButton onPress={() => submitMessage ()} >
+        <MessageButtonText>Send</MessageButtonText>
+      </MessageButton>   
+    </ViewCustom>
   );
 };
 

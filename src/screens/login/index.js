@@ -1,16 +1,15 @@
-import React, { useState, useEffect, PureComponent } from "react";
-import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { useTranslation } from "react-i18next";
+import { ViewCustom, ButtonOrange, ButtonOrangeText, HeaderText, MainText, Link, FieldInput, PasswordInput, Header, Spacer } from './styles';
 
 
-import Logo from "../../components/Logo";
-import Title from "../../components/Title";
+
 
 
 const Login = ({ navigation }) => { 
-
+    const { t } = useTranslation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState(""); 
 
@@ -57,34 +56,49 @@ const Login = ({ navigation }) => {
     
 
     return (
-        <View>
-            <Title title="Login page"/>
-            <Logo />
-            <Text>
-                Email:
-            </Text>
-            <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                keyboardType="email-address"
-            />
+        <>
+            <Header>
+                <HeaderText> 
+                    {t("login.title")} 
+                </HeaderText> 
+            </Header>
+            <ViewCustom>
+                <Spacer />
+                <MainText>
+                    {t("login.email")}
+                </MainText>
+                <FieldInput
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                    keyboardType="email-address"
+                />
 
 
-            <Text>
-                Password:
-            </Text>
-            <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                value={password}
-                secureTextEntry={true}
-                onChangeText={(text) => setPassword(text)}
-            />
-            <Button title="Login" onPress={() => log()} />
-            <Button title="Register" onPress={() => navigation.navigate('Register')} />
-        </View >
+                <MainText>
+                    {t("login.password")}
+                </MainText>
+                <PasswordInput
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                    value={password}
+                    secureTextEntry={true}
+                    onChangeText={(text) => setPassword(text)}
+                />
+                <ButtonOrange title={t("login.button_login")} onPress={() => log()}>
+                    <ButtonOrangeText>
+                        {t("login.button_login")}
+                    </ButtonOrangeText>
+                </ButtonOrange>
+
+                <MainText>{t("login.no_account")}</MainText>
+                
+                <Link onPress={() => navigation.navigate('Register')} >
+                    {t("login.button_register")}
+                </Link>
+            </ViewCustom >
+        </>
     );
-    }
+}
 
 
  

@@ -16,22 +16,30 @@ const Swipe = (props) => {
     const like = (user, typeOfLike) => {
     //blockage du bruteforce 
         console.log("like : " + typeOfLike);
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', "authorization": getStorage("token") },
-            body: JSON.stringify({ user_id: getStorage("userId"), target_id: user.user_id, type: typeOfLike })
-        };
-        console.log(requestOptions)
-        fetch('http://localhost:3001/api/match/' + getStorage("userId"), requestOptions)
-            .then(async response => {
-                const isJson = response.headers.get('content-type')?.includes('application/json');
-                const data = isJson && await response.json();
+        AsyncStorage.getItem('userId').then(userId => {
+            AsyncStorage.getItem('token').then(token => {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', "authorization": token },
+                    body: JSON.stringify({ user_id: userId, target_id: user.user_id, type: typeOfLike })
+                };
+                const API_LINK = process.env['API_LINK'] + "/api/match/";
+                fetch(API_LINK + userId, requestOptions)
+                    .then(async response => {
+                        const isJson = response.headers.get('content-type')?.includes('application/json');
+                        const data = isJson && await response.json();
+                        if (!response.ok) {
+                            const error = (data && data.message) || response.status;
+                            console.log(error);
+                            
+                        }
 
-
+                    })
+                    .catch(error => {
+                        console.error('There was an error!', error);
+                    });
             })
-            .catch(error => {
-                console.error('There was an error!', error);
-            });
+        })
     }
 
 

@@ -10,8 +10,8 @@ import marvelLogo from "../../img/peel_logo.png";
 const Logo = () => { 
 
     const ImageLogo = styled.Image`
-        width: 50%;
-        height: 50%;
+        width: 200px;
+        height: 200px;
         `;
 
 

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import { View, Text, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserMewssage, UserMewssageText, ContactMessage, ContactMessageText, CustomFlatList } from './styles';
 
 
 
 
 function MessageList({target_id, socket}) {
   const [messages, setMessages] = useState({});
-
+  const [userId, setUserId] = useState(0);
   
   
 
@@ -17,6 +17,7 @@ function MessageList({target_id, socket}) {
         AsyncStorage.getItem('token').then(token => {
             console.log("userId : ", userId);
             console.log("token : ", token);
+            setUserId(userId);
             const API_LINK = process.env['API_LINK'] + "/api/chat";
             let requestOptions = {  
                 method: 'GET',
@@ -28,77 +29,63 @@ function MessageList({target_id, socket}) {
                 setMessages(data);
                 console.log(data);
             })
+          const messageListener = (message) => {
+            setMessages((prevMessages) => {
+              const newMessages = {...prevMessages};
+              if((message.user_id === userId && message.target_id === target_id) || ((message.user_id) === target_id.toString() &&  (message.target_id).toString() === getCookie("userId"))){
+                  newMessages[message.id] = message;
+              }
+              return newMessages;
+            });
+          };
+          socket.on('message', messageListener);
+          let Users = {user_id : userId, target_id : target_id, token : token}
+          socket.emit('getMessages', Users);
 
-            const messageListener = (message) => {
-                setMessages((prevMessages) => {
-                    const newMessages = {...prevMessages};
-                    if((message.user_id === userId && message.target_id === target_id) || ((message.user_id) === target_id.toString() &&  (message.target_id).toString() === userId)){
-                        // console.log("test")
-                        newMessages[message.id] = message;
-                    }
-                    return newMessages;
-                });
-            };
-            socket.onmessage = (e) => {
-              // a message was received
-              console.log(e);
-            };
-            socket.on('message', messageListener);
-            let Users = {user_id : user_id, target_id : target_id, token : token}
-            console.log(Users)
-            socket.emit('getMessages', Users);
-            return () => {
-              socket.off('message', messageListener);
-            };
-            
+          return () => {
+            socket.off('message', messageListener);
+          };
         })
     })
   }, [target_id,socket]);
 
   return (
-    <View className="message-list">
-        
-      {[...Object.values(messages)]
-        .sort((a, b) => a.time - b.time)
-        .map((message) => (
-          <View key={message.id}>
-            <Message_user message={message} />
-          </View>
-        ))
-      }
-    </View>
+    <CustomFlatList
+        data={[...Object.values(messages)].sort((a, b) => a.time - b.time).reverse()}
+        renderItem={({ item }) => <Message_user message={item} userId={userId} />}
+        keyExtractor={(item) => item.id}
+        // initialScrollIndex={[...Object.values(messages)].length - 1}
+        inverted
+    />
   );
 }
 
 const Message_user = (params) => {
-    const message = params.message
-    const message_User = message.user_id;
-    const user_id = AsyncStorage.getItem('userId');
-  
-    if (user_id === message_User.toString()) {
-        return (
-            <View
-                key={message.id}
-                className="message-container user_msg"
-                title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
-            >
-                <Text className="message">{message.message_value}</Text>
-                <Text className="time-right">{new Date(message.message_time).toLocaleTimeString()}</Text>
-            </View>
-        );
-    }else{
-        return (
-            <View
-                key={message.id}
-                className="message-container target_msg"
-                title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
-            >
-                <Text className="message">{message.message_value}</Text>
-                <Text className="time-right">{new Date(message.message_time).toLocaleTimeString()}</Text>
-            </View>
-        );
-    }
+  const message = params.message
+  const message_User = message.user_id;
+  const userId = params.userId;  
+  if (userId === message_User.toString()) {
+    return (
+      <UserMewssage
+        key={message.id}
+        title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
+      >
+        <UserMewssageText>{message.message_value}</UserMewssageText>
+        <UserMewssageText>{new Date(message.message_time).toLocaleTimeString()}</UserMewssageText>
+      </UserMewssage>
+    );
+  }else{
+    return (
+      <ContactMessage
+        key={message.id}
+        title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
+      >
+        <ContactMessageText>{message.message_value}</ContactMessageText>
+        <ContactMessageText>{new Date(message.message_time).toLocaleTimeString()}</ContactMessageText>
+      </ContactMessage>
+    );
   }
+}
 
 
 

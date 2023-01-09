@@ -1,55 +1,50 @@
 import React, { useState, useEffect, PureComponent } from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, ActivityIndicator, SafeAreaView, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { useTranslation } from "react-i18next";
+import { GetContactList } from "../../functions/api_request";
 
 const Stack = createNativeStackNavigator();
 // import Message from "./messaging.component"
 import Chat from "../chat"
  
-export default function Contact() {
+export default function Contact({navigation}) {
     const [contactList, setContactList] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        AsyncStorage.getItem('userId').then(userId => {
-            AsyncStorage.getItem('token').then(token => {
-                const requestOptions = {  
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json', "authorization": token},
-                };
-                const API_LINK = process.env['API_LINK'] + "/api/contact/list/" + userId;
-                console.log(API_LINK)
-                axios.get(API_LINK,requestOptions).then(res => {
-                    // console.log(res);
-                    var data =  res.data; 
-                    console.log(data);
-                    setContactList(data); 
-                })
-            })
-        }) 
+        GetContactList().then(list => {
+            if (list != undefined) {
+                setContactList(list);
+                setLoading(false);
+            } else {
+                navigation.navigate('Public');
+            }
+        })
     }, []);
 
-
-    function ContactList({navigation}) {
+    if (loading) {
         return (
-            <View className="message-app">
-                {contactList.map((contact) => (
-                    <View className="contact" key={contact.contactId}>
-                        <Text>{contact.firstname}</Text>
-                        <Button  title={contact.firstname} onPress={() => navigation.navigate('Chat', {contact : contact})}/>
-                    </View>
-                ))}
-            </View>
+        <SafeAreaView>
+            <ActivityIndicator />
+        </SafeAreaView>
         );
-    } 
+    }
 
-  return (
-    <Stack.Navigator initialRouteName="ContactList">
-        <Stack.Screen name="ContactList" component={ContactList}/>
-        <Stack.Screen name="Chat" component={Chat}/>
-    </Stack.Navigator>
-  );
+    return (
+        <View className="message-app">
+            {contactList.map((contact) => (
+                <View className="contact" key={contact.contact_id}>
+                    <Text>{contact.firstname}</Text>
+                    <Button  title={contact.firstname} onPress={() => {
+                        navigation.navigate('Chat', {contact : contact})
+                    }}/>
+                </View>
+            ))}
+        </View>
+    );
 }
 
 

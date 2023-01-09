@@ -1,20 +1,16 @@
-import React, {useEffect} from 'react';
-import {SafeAreaView, ActivityIndicator} from 'react-native';
-import { useNavigation} from '@react-navigation/native';
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import './axiosInterceptor';
 
 
 
-import AuthStack from './authStack';
-import PublicStack from './publicStack';
-import ProfileStack from './profileStack';
+import AuthStack from '../stacks/authStack';
+import PublicStack from '../stacks/publicStack';
+import ProfileStack from '../stacks/profileStack';
 
 
 const Stack = createNativeStackNavigator();
-
-//Création du router
 const Routes = () => {
   
   

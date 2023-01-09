@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
-import {API_LINK} from '@env';
-
-import Logo from "../../components/Logo";
-import Title from "../../components/Title";
-
-
-
+import { useTranslation } from "react-i18next";
+import { ViewCustom, ButtonOrange, ButtonOrangeText, HeaderText, MainText, Link, FieldInput, PasswordInput, Header, Spacer } from './styles';
 
 
 const Register = ({ navigation }) => { 
-
+    const { t } = useTranslation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState(""); 
     const [repeatPassword, setRepeatPassword] = useState(""); 
@@ -72,44 +65,54 @@ const Register = ({ navigation }) => {
     
 
     return (
-        <View>
-            <Title title="Register page"/>
-            <Logo />
-            <Text>
-                Email:
-            </Text>
-            <TextInput
-                style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                keyboardType="email-address"
-            />
-
-            <View>
-                <Text>
-                    Password:
-                </Text>
-                <TextInput
+        <>
+            <Header>
+                <HeaderText> 
+                    {t("register.title")} 
+                </HeaderText> 
+            </Header>
+            <ViewCustom>
+                <Spacer />
+                <MainText>
+                    {t("register.email")}
+                </MainText>
+                <FieldInput
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                    keyboardType="email-address"
+                />
+                <MainText>
+                    {t("register.password")}
+                </MainText>
+                <PasswordInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                     value={password}
                     secureTextEntry={true}
                     onChangeText={(text) => setPassword(text)}
                 />
-                <Text>
-                    Repeat Password:
-                </Text>
-                <TextInput
+                <MainText>
+                    {t("register.password_confirm")}
+                </MainText>
+                <PasswordInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                     value={repeatPassword}
                     secureTextEntry={true}
                     onChangeText={(text) => setRepeatPassword(text)}
                 />
-            </View>
-            <Button title="Register" onPress={() => SignIn()} />
-            <Button title="Login" onPress={() => navigation.navigate('Login')} />
-        </View >
+                <ButtonOrange title={t("register.button_register")} onPress={() => log()}>
+                    <ButtonOrangeText>
+                        {t("register.button_register")}
+                    </ButtonOrangeText>
+                </ButtonOrange>
+                <MainText>{t("register.already_account")} </MainText>
+                <Link onPress={() => navigation.navigate('Login')} >
+                    {t("register.button_login")}
+                </Link>
+            </ViewCustom>
+        </>
     );
-    }
+}
  
 
 export default Register; 

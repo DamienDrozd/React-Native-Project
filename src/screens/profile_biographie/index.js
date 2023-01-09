@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
-import axios from "axios";
+import { View, Text, TextInput } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useTranslation } from "react-i18next";
 import Update_Button from "../../components/Update_User";
 
 
@@ -10,37 +9,55 @@ import Update_Button from "../../components/Update_User";
 
  
 export default function Biographie({ route, navigation }) {
-    const [user, setUser] = useState(route.params.user)
+    const { t } = useTranslation();
+    const [user, setUser] = useState({});
+ 
+    useEffect(() => {
+        AsyncStorage.getItem('user').then(fetchedUser => {
+            fetchedUser = JSON.parse(fetchedUser);
+            fetchedUser.birthday = new Date(fetchedUser.birthday);
+            setUser(fetchedUser);
+            console.log("storage user : ", user)
+        });
+    }, []);
 
 
+    let navButton;
+    if (user.biographie != undefined && user.biographie != "" ){ 
+        navButton = (
+            <View>
+                <Update_Button user={user} prevPage="Profile3" nextPage="Profile5"  navigation={navigation} />
+            </View>
+        ) 
+    } else {
+        navButton = (
+            <View> 
+                <Text>{t("profile.fill")}</Text>
+                <Update_Button user={user} prevPage="Profile3" nextPage=""  navigation={navigation} />
+            </View>
+        )
+    }
 
     return (
       <View>        
-          <Text>Biographie</Text>
-
+          <Text>{t("profile.title")}</Text>
           <View>
             <TextInput
               multiline
               numberOfLines={10}
               // style={styles.input}
               onChangeText={(text) => {
-                  var newUser = user;
+                  let newUser = {...user};
                   newUser.biographie = text;
                   setUser(newUser)
               }}
               value={user.biographie}
-              placeholder="Entrez votre biographie"
-              
+              placeholder={t("profile.biography")}     
             />
           </View>
-          <Update_Button user={user}/>  
+          {navButton}
       </View>
     );
   }
 
-const getStorage = (token) => {
-  AsyncStorage.getItem(token).then((token) => {
-    return token;
-  })
-}
 

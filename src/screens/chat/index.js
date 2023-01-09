@@ -1,11 +1,9 @@
-import React, { useState, useEffect, PureComponent } from "react";
-import { View, Text, Button } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from "axios";
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, { useState, useEffect } from "react";
+import { View, Text, ActivityIndicator, SafeAreaView } from "react-native";
 import MessageList from '../../components/Message_List';
 import MessageInput from '../../components/Message_Input';
-// import io from "socket.io-client";
+import io from "socket.io-client";
+
 const ENDPOINT = process.env['API_LINK']
 
 // import Message from "./messaging.component"
@@ -18,32 +16,27 @@ export default function Chat({ route, navigation }) {
     
 
     useEffect(() => {
-        // AsyncStorage.getItem('userId').then(userId => {
-        //     AsyncStorage.getItem('token').then(token => {
-        //         const target_id = contact.contactId
-        //         const newSocket = io(ENDPOINT, user_id, token, target_id);
-        //         // const newSocket = io(ENDPOINT);
-        //         setSocket(newSocket);
-        //         return () => newSocket.close(); 
-        //     })
-        // })
-        // const newSocket = new WebSocket(ENDPOINT);
-        // setSocket(newSocket);
-        // return () => newSocket.close(); 
-        const socket = io('http://localhost:3000');
-        socket.on('connect', () => {
-            console.log('connected');
+        navigation.setOptions({ title: contact.firstname });
+        const newSocket = io(ENDPOINT);
+        newSocket.on('connect', () => {
+            console.log('socket connected');
         });
-        socket.on('disconnect', () => {
-            console.log('disconnected');
+        newSocket.on('disconnect', () => {
+            console.log('socket disconnected');
         });
-        socket.on('message', (message) => {
+        newSocket.on('message', (message) => {
             console.log(message);
         });
-        socket.on('error', (error) => {
+        newSocket.on('error', (error) => {
             console.log(error);
+            showMessage({
+                message: "error with sockets : ", error,
+                type: "info",
+            });
         });
-        setSocket(socket);
+        setSocket(newSocket);
+        console.log("socket", socket)
+        return () => newSocket.close(); 
     }, [setSocket]);
 
 
@@ -51,14 +44,17 @@ export default function Chat({ route, navigation }) {
 
     return (
         <View className="message-app">
-            <Text>{contact.firstname}</Text>
             { socket ? (
-                <View className="chat-container">
-                    <MessageList target_id={contact.contact_id} socket={socket} />
+                <View>
+                    <View>
+                        <MessageList target_id={contact.contact_id} socket={socket} />
+                    </View>
                     <MessageInput target_id={contact.contact_id}  socket={socket} />
                 </View>
             ) : (
-                <Text>Not Connected</Text>
+                <SafeAreaView>
+                    <ActivityIndicator />
+                </SafeAreaView>
             )}
         </View>
     );
