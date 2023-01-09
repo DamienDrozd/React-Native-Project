@@ -52,7 +52,7 @@ function MessageList({target_id, socket}) {
   return (
     <CustomFlatList
         data={[...Object.values(messages)].sort((a, b) => a.time - b.time).reverse()}
-        renderItem={({ item }) => <Message_user message={item} userId={userId} />}
+        renderItem={({ item }) => <Message_user message={item} userId={userId} key={userId} />}
         keyExtractor={(item) => item.id}
         // initialScrollIndex={[...Object.values(messages)].length - 1}
         inverted
