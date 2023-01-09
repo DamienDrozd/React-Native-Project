@@ -30,7 +30,7 @@
 
 ### A faire
 
-- fonction async storage et call api dans un fichier externe 
+- fonction async storage et call api dans un fichier externe  (Login, register, updateuser, getmessage, )
 - Finir swipe (flatlist)
 - Design
 

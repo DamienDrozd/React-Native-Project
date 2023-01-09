@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import Logout, { addStorage, getStorage, Logout } from './storage';
+import  { addStorage, getStorage, Logout } from './storage';
 
 
 export async function GetUser(defaultUser) {
@@ -17,10 +17,11 @@ export async function GetUser(defaultUser) {
             user.birthday = new Date();
         }
         console.log("User authenticated : ", user);
-        return addStorage(user, "user")   
+        addStorage("user", user)
+        return user
     }).catch(error => {
         console.log("error whith api : ", error)
-        addStorage(defaultUser, "user")  
+        addStorage("user", defaultUser)  
         return false
     });
 }

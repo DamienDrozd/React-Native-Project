@@ -27,9 +27,7 @@ const PublicStack = () => {
         if (user_data != false) {
           setUser(user_data);
           setLoading(false);
-        } else {
-          setLoading(false);
-        }
+        } 
       })
   }, []);
 

@@ -30,8 +30,9 @@ export async function getStorage(value){
     })
 }
 
-export async function addStorage(value, name){
-    return  AsyncStorage.setItem(value, JSON.stringify(name)).then(() => {
+export async function addStorage(name, value){
+    console.log("add to storage : ", name, value)
+    return AsyncStorage.setItem(name, JSON.stringify(value)).then(() => {
         console.log(name, "added to storage");
         return (true);
     }).catch((error) => {
