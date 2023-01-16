@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import styles from './styles';
+import React, { useState } from "react";
+import { View, Text } from "react-native";
+import {HomeCard, Name, Biography, BiographyText, InteretBox, InteretView} from './styles';
 
 
 
@@ -27,25 +27,25 @@ const Swipe_Card = (props) => {
 
 
     return (
-        <View style = {styles.container}>
-            <Text>
+        <HomeCard>
+            <Name>
                 {User.firstname} {getAge(User.birthday)}
-            </Text>
+            </Name>
 
-            <View>
-                <Text>
+            <Biography>
+                <BiographyText>
                     {User.bio}
-                </Text>
-            </View>
-            <View>
+                </BiographyText>
+            </Biography>
+            <InteretView>
                 {User.interet.map((interet) => {
                     return (
-                        <View key={interet.name}>
-                            <Text>{interet.name}</Text>
-                        </View>
+                        <InteretBox key={interet.name}>
+                            <BiographyText>{interet.name}</BiographyText>
+                        </InteretBox>
                     )
                 })}
-            </View>
+            </InteretView>
 
             {User.question.map((question) => {
                 return (
@@ -59,7 +59,7 @@ const Swipe_Card = (props) => {
                     </View>
                 ) 
             })}
-        </View >
+        </HomeCard >
     );
     }
 

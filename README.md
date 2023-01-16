@@ -31,8 +31,8 @@
 ### A faire
 
 - fonction async storage et call api dans un fichier externe  (Login, register, updateuser, getmessage, )
-- Finir swipe (flatlist)
 - Design
+- Home swipe button 
 
 
 Cleaner code :
@@ -51,7 +51,4 @@ Page profil :
 ### Optionel
 - Rémunération
 - Notifications
-- Gifs
-- music pref
-- film pref
-- Vocal
+- Pubs

@@ -1,13 +1,47 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { Dimensions } from "react-native";
+import styled from 'styled-components/native';
+
+
 
 const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
-export default StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-    }
-});
+export const HomeCard =  styled.View`
+    background-color: ${props => props.theme.background};
+    border-radius: 50px;
+    width: 90%;
+    margin: 5%;
+    padding: 5%;
+`
+
+export const Name = styled.Text`
+    font-size: 20px;
+    color: ${props => props.theme.primary};
+`
+
+export const Biography = styled.View`
+    background-color: ${props => props.theme.primary};
+`
+
+export const BiographyText = styled.Text`
+    font-size: 15px;
+    color: ${props => props.theme.background};
+    margin: 5%;
+`
+
+export const InteretBox = styled.Text`
+    background-color: ${props => props.theme.primary};
+    border-radius: 30px;
+    /* width: 20%; */
+    margin: 2%;
+    padding: 5%;
+    
+`
+
+export const InteretView = styled.View`
+    flex-direction: row;
+    flex-wrap: wrap;
+    /* width: 100%; */
+    /* display: block; */
+    /* display:inline; */
+`

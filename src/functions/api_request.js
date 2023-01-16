@@ -1,5 +1,5 @@
 import axios from "axios";
-
+// import showMessage from "react-native-flash-message";
 import  { addStorage, getStorage, Logout } from './storage';
 
 
@@ -34,11 +34,11 @@ export async function TestAuth() {
     const API_LINK = process.env['API_LINK'] + "/api/auth/protected";
     if (userId == null || token == null || userId == undefined || token == undefined) {
         console.log("User not authenticated");
-        showMessage({
-            message: "User not authenticated : ",
-            type: "info",
-        });
-        Logout();
+        // showMessage({
+        //     message: "User not authenticated : ",
+        //     type: "info",
+        // });
+        await Logout();
         return auth_bool;
     }
     let response = await axios.get(API_LINK, {
@@ -47,11 +47,11 @@ export async function TestAuth() {
     })
     if (response == null || response == undefined || response == "") {
         console.log("User not authenticated : ", response);
-        Logout();
-        showMessage({
-            message: "User not authenticated : ",
-            type: "info",
-        });
+        await Logout();
+        // showMessage({
+        //     message: "User not authenticated : ",
+        //     type: "info",
+        // });
         return auth_bool;
     } else {
         console.log("User authenticated : ", response.data);

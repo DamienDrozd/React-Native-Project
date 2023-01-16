@@ -1,14 +1,8 @@
-import React, { useState, useEffect, PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, ActivityIndicator, SafeAreaView, Button } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from "axios";
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import { useTranslation } from "react-i18next";
 import { GetContactList } from "../../functions/api_request";
 
-const Stack = createNativeStackNavigator();
-// import Message from "./messaging.component"
-import Chat from "../chat"
+
  
 export default function Contact({navigation}) {
     const [contactList, setContactList] = useState([]);

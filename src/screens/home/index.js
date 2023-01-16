@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, SafeAreaView } from "react-native";
 import { useTranslation } from "react-i18next";
-
+import {HomeSwiperView} from "./styles"
 import Swipe  from "../../components/Swipe";
 
 import { GetMatchList} from "../../functions/api_request"
@@ -39,10 +39,10 @@ const Match = () => {
     
     return (
         <View>
-            <View>
+            <HomeSwiperView>
                 <Text>{t("home.title")}</Text>
                 <Swipe userList={userList} />
-            </View>
+            </HomeSwiperView>
         </View>
     )
 }

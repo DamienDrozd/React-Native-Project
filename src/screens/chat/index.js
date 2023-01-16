@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, SafeAreaView } from "react-native";
+import { View, ActivityIndicator, SafeAreaView } from "react-native";
 import MessageList from '../../components/Message_List';
 import MessageInput from '../../components/Message_Input';
 import io from "socket.io-client";

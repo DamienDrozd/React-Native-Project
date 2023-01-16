@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {View, SafeAreaView, ActivityIndicator} from 'react-native';
+import {SafeAreaView, ActivityIndicator} from 'react-native';
 import { useTranslation } from "react-i18next";
 
 
@@ -20,6 +20,7 @@ const PublicStack = ({navigation}) => {
   useEffect(() => {
     (async () => {
       let auth_bool = await TestAuth()
+      console.log("auth_bool : ", auth_bool)
       if (auth_bool == true) {
         setLoading(false);
         console.log("navigate to auth")

@@ -46,37 +46,30 @@ const Swipe = (props) => {
 
     if (userList !== undefined) { 
         return (
-            <View>
-                <CardStack
-                    loop={true}
-                    verticalSwipe={false}
-                    renderNoMoreCards={() => null}
-                    style = {styles.cardSwipe}
-                    ref={swiper => (this.swiper = swiper)}                    
-                >
-                    {userList.map((user, index) => (
-                        <Card 
-                            onSwipedLeft={() => {like(user, "dislike")}}
-                            onSwipedRight={() => {like(user, "like")}}
-                            key={index} 
-                            user={user}
-                        >
-                            <Swipe_Card 
-                                User={user} 
-                            />
-                        </Card>
-                    ))}
-                </CardStack> 
-            </View>
+            <CardStack
+                loop={true}
+                verticalSwipe={false}
+                renderNoMoreCards={() => null}
+                style = {styles.cardSwipe}
+                ref={swiper => (this.swiper = swiper)}                    
+            >
+                {userList.map((user, index) => (
+                    <Card 
+                        onSwipedLeft={() => {like(user, "dislike")}}
+                        onSwipedRight={() => {like(user, "like")}}
+                        key={index} 
+                        user={user}
+                    >
+                        <Swipe_Card 
+                            User={user} 
+                        />
+                    </Card>
+                ))}
+            </CardStack> 
         );
     }
 }
 
-const getStorage = (token) => {
-  AsyncStorage.getItem(token).then((token) => {
-    return token;
-  })
-}
  
 
 export default Swipe; 

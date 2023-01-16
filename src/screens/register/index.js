@@ -100,7 +100,7 @@ const Register = ({ navigation }) => {
                     secureTextEntry={true}
                     onChangeText={(text) => setRepeatPassword(text)}
                 />
-                <ButtonOrange title={t("register.button_register")} onPress={() => log()}>
+                <ButtonOrange title={t("register.button_register")} onPress={() => SignIn()}>
                     <ButtonOrangeText>
                         {t("register.button_register")}
                     </ButtonOrangeText>
