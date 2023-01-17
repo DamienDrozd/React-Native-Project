@@ -22,6 +22,7 @@
 -web sockets 
 -Traduction (I18N)
 -Messagerie (flatlist)
+- fonction async storage, socket et call api dans des fichiers externe  
 
 
 
@@ -30,25 +31,46 @@
 
 ### A faire
 
-- fonction async storage et call api dans un fichier externe  (Login, register, updateuser, getmessage, )
-- Design
+- Notifications
+- Pubs
 - Home swipe button 
+- Design
+
 
 
 Cleaner code :
     - Retirer code / imports non utilisés
     - Supprimer paquêts non utilisés
     - gestion hors ligne (écran de chargement pour les requêtes qui chargent) + tester l'application sans la bdd puis sans l'api
-    - faire des composants au niveau du register
 
 
 Page profil : 
     - age slider
     - conditions de validation des input
-    - Empèchezr la casse au niveau du register
+    - Empècher la casse
     - text input autocomplete value
+
+Liste des routes : 
+  - /api/profile/             -       getUser
+  - /api/profile/             -       postUser
+
+  - /api/match/               -       GetMatchList
+  - /api/like/                -       likeUser
+    
+  - /api/contact/list/        -       getContactList
+  - /api/chat/                -       getChatList
+    
+  - /api/auth/signin/         -       register
+  - /api/auth/signup/         -       login
+  - /api/auth/protected       -       testAutentification
+    
+  - /api/interet/             -       getinteret
+  - /api/question/            -       getquestion
+
+Socket : 
+  - getMessage
+  - emitMessage
 
 ### Optionel
 - Rémunération
-- Notifications
-- Pubs
+- API hébergée
