@@ -31,10 +31,11 @@
 
 ### A faire
 
+- Home swipe button 
 - Notifications
 - Pubs
-- Home swipe button 
 - Design
+- faire un readme propre
 
 
 
@@ -57,7 +58,7 @@ Liste des routes :
   - /api/match/               -       GetMatchList
   - /api/like/                -       likeUser
     
-  - /api/contact/list/        -       getContactList
+  - /api/contact/        -       getContactList
   - /api/chat/                -       getChatList
     
   - /api/auth/signin/         -       register
@@ -66,6 +67,7 @@ Liste des routes :
     
   - /api/interet/             -       getinteret
   - /api/question/            -       getquestion
+
 
 Socket : 
   - getMessage
