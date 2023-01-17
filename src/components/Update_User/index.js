@@ -4,12 +4,15 @@ import { View, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
 
+import { updateUser} from "../../functions/api_request"
+
+
 
 const Update_Button = (props) => {
-    const [user, setUser] = useState(props.user);
-    const [nextPage, setNextPage] = useState(props.nextPage);
-    const [prevPage, setPrevPage] = useState(props.prevPage);
-    const [navigation, setNavigation] = useState(props.navigation);
+    const [user] = useState(props.user);
+    const [nextPage] = useState(props.nextPage);
+    const [prevPage] = useState(props.prevPage);
+    const [navigation] = useState(props.navigation);
     
     
     return (
@@ -49,51 +52,14 @@ const PrevButton = (props) => {
     )
 }  
 
-
-const getStorage = (token) => {
-  AsyncStorage.getItem(token).then((token) => {
-    return token; 
-  })
-}
-
 const nextAction = (nextPage, navigation, user) => {
-    submit(user);
+    updateUser(user);
     navigation.navigate(nextPage);
 }
 
 const prevAction = (prevPage, navigation, user) => {
-    submit(user);
+    updateUser(user);
     navigation.navigate(prevPage);
 }
 
-const submit = (User) => {
-    console.log(User)
-    //blockage du bruteforce 
-    
-    AsyncStorage.setItem('user', JSON.stringify(User)).then(() => {
-        AsyncStorage.getItem('userId').then(userId => {
-            AsyncStorage.getItem('token').then(token => {
-                const requestOptions = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', "authorization": token},
-                    body: JSON.stringify(User)
-                };
-                const API_LINK = process.env['API_LINK'] + "/api/profile/";
-                fetch(API_LINK+userId, requestOptions)
-                .then(async response => {
-                    const isJson = response.headers.get('content-type')?.includes('application/json');
-                    const data = isJson && await response.json();
-                    alert(data.message)
-                    
-                }).catch((error) => {
-                    console.log("api error : ", error);
-                });
-            });
-        });
-    })
-    .catch(error => {
-        console.error('Storage error!', error);
-    });
-} 
-
-export default Update_Button;
+export default Update_Button; 

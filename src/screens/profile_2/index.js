@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 
 
 import Update_Button from "../../components/Update_User";
+import { getStorage } from "../../functions/storage"; 
 
 
 
@@ -16,16 +17,13 @@ export default function Profile2({ route, navigation }) {
   const [user, setUser] = useState({"birthday": new Date()});
 
   useEffect(() => {
-    AsyncStorage.getItem('user').then(fetchedUser => {
-        fetchedUser = JSON.parse(fetchedUser);
-        console.log(fetchedUser.birthday)
+   getStorage('user').then(fetchedUser => {
         if (fetchedUser.birthday == undefined){
           fetchedUser.birthday = new Date();
         } else {
           fetchedUser.birthday = new Date(fetchedUser.birthday);
         }
         setUser(fetchedUser);
-        console.log("storage user : ", user)
     });
   }, []);
 

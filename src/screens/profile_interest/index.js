@@ -8,6 +8,9 @@ import { useTranslation } from "react-i18next";
 import Update_Button from "../../components/Update_User";
 
 
+import { getStorage } from "../../functions/storage"; 
+import { getInteretList } from "../../functions/api_request";
+
 
 
  
@@ -18,26 +21,16 @@ export default function Interet({ route, navigation }) {
   const [loading, setLoading] = React.useState(true);
  
     useEffect(() => {
-        AsyncStorage.getItem('user').then(fetchedUser => {
-            fetchedUser = JSON.parse(fetchedUser);
-            fetchedUser.birthday = new Date(fetchedUser.birthday);
-            if (fetchedUser.interet == undefined) {
-                fetchedUser.interet = [];
-            }
-            setUser(fetchedUser);
-            console.log("storage user : ", user)
-        });
+      getStorage('user').then(fetchedUser => {
+          if (fetchedUser.interet == undefined) {
+              fetchedUser.interet = [];
+          }
+          setUser(fetchedUser);
+      });
 
-
-      const API_LINK = process.env['API_LINK'] + "/api/interet";
-      axios.get(API_LINK).then(async res => {
-        let data = await res.data;
-        console.log("data : ", data)
-        setInteretList(data)
-        setLoading(false);        
-      }).catch(error => {
-          setLoading(false);    
-          console.error('There was an error with api!', error);
+      getInteretList().then(data => {
+        setInteretList(data);
+        setLoading(false);
       });
   }, []);
 

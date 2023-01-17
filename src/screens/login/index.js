@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useTranslation } from "react-i18next";
 import { ViewCustom, ButtonOrange, ButtonOrangeText, HeaderText, MainText, Link, FieldInput, PasswordInput, Header, Spacer } from './styles';
 
-
+import { loginRequest } from "../../functions/api_request";
 
 
 
@@ -27,31 +27,8 @@ const Login = ({ navigation }) => {
         if ( !email.toLowerCase().match(email_regex)) {
             alert("erreur de saisie");
         } else {
-            const API_LINK = process.env['API_LINK'] + "/api/auth/signin";
-            console.log("API_LINK : ", API_LINK);
-            console.log("envoi de la requête");
-            axios.post(API_LINK, {
-                email: email, 
-                password: password
-            })
-            .then(response => {
-                console.log(response);
-                console.log("response api : ", response.data);
-                AsyncStorage.setItem('token', response.data['token']).then(() => {
-                    AsyncStorage.setItem('userId', response.data['userId'].toString()).then(() => {
-                        alert("Register success");
-                        navigation.navigate("Auth");
-                    }).catch((error) => {
-                        alert("storage error : ", error);
-                    });
-                }).catch((error) => {
-                    alert("storage error : ", error);
-                });
-            }).catch(error => {
-                alert("api error : ", error);
-            }); 
+            loginRequest(email, password, navigation);
         }
-        
     }
     
 

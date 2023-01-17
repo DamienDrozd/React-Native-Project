@@ -4,11 +4,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {View, Text, TextInput, SafeAreaView, ActivityIndicator} from 'react-native';
 import ModalSelector from 'react-native-modal-selector'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
 import Update_Button from "../../components/Update_User";
 
 
+import { getStorage } from "../../functions/storage"; 
+import { getQuestionList } from "../../functions/api_request";
 
 
  
@@ -20,10 +21,7 @@ export default function QuestionProfil({ route, navigation }) {
   const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem('user').then(fetchedUser => {
-      console.log(fetchedUser)
-      fetchedUser = JSON.parse(fetchedUser);
-      console.log(fetchedUser)
+    getStorage('user').then(fetchedUser => {
       fetchedUser.birthday = new Date(fetchedUser.birthday);
       console.log("question_id : ", fetchedUser.question_id)
       console.log("response : ", fetchedUser.response)
@@ -32,32 +30,13 @@ export default function QuestionProfil({ route, navigation }) {
       } 
       if(fetchedUser.response == undefined || fetchedUser.response.length != 3){
         fetchedUser.response = ["","",""];
-
       }
-      console.log("question_id : ", fetchedUser.question_id)
-      console.log("response : ", fetchedUser.response)
       setUser(fetchedUser);
-      console.log("storage user : ", user)
     });
 
-
-    const API_LINK = process.env['API_LINK'] + "/api/question";
-    axios.get(API_LINK).then(async res => {
-      let data = res.data;
-      for (let i = 0; i < data.length; i++) {
-        let newobj = {};
-        console.log("old obj : ", data[i])
-        newobj.key = data[i].id;
-        newobj.label = data[i].name;
-        data[i] = newobj;
-        console.log("newobj : ", newobj)
-      }
-      console.log("question list : ", questionList)
-      setquestionList(data)
-      setLoading(false); 
-    }).catch(error => {
-      console.error('There was an error with api!', error);
-      setLoading(false); 
+    getQuestionList().then(data => {
+      setquestionList(data);
+      setLoading(false);
     });
         
   }, []);
@@ -75,7 +54,7 @@ export default function QuestionProfil({ route, navigation }) {
     if (user.question_id.length == 3 && user.response.length == 3 && user.response[0] != "" && user.response[1] != "" && user.response[2] != "" ){ 
       navButton = (
         <View>
-          <Update_Button user={user} prevPage="Profile6" nextPage="Public"  navigation={navigation} />
+          <Update_Button user={user} prevPage="Profile6" nextPage="Auth"  navigation={navigation} />
         </View>
       ) 
     } else {
@@ -136,7 +115,7 @@ export default function QuestionProfil({ route, navigation }) {
                   let newUser = {...user}
                   newUser.response[1] = text;
                   setUser(newUser);
-              }}
+              }} 
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
             />            
           </View>

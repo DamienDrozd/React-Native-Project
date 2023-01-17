@@ -1,23 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FieldInput, MessageButton, MessageButtonText, ViewCustom } from './styles';
+import { sendMessageSocket } from '../../functions/message_sockets';
 
 
 const MessageInput = ({target_id,socket}) => {
   const [value, setValue] = useState('');
 
+
   const submitMessage = () => {
-    AsyncStorage.getItem('userId').then(userId => {
-      AsyncStorage.getItem('token').then(token => {
-        let message = {value : value, user_id : userId, target_id : target_id, token : token}
-        socket.emit('message', message);
-        socket.onopen = () => {
-          socket.send('message', message);
-        };
-        setValue('');
-      })
-    })
+    sendMessageSocket(target_id, socket, value);
+    setValue('');
   }; 
   
 

@@ -1,7 +1,5 @@
-// import * as RootNavigation from './rootNavigation';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message";
 
 // Add a request interceptor
 axios.interceptors.request.use(

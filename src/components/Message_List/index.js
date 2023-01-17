@@ -3,6 +3,9 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserMewssage, UserMewssageText, ContactMessage, ContactMessageText, CustomFlatList } from './styles';
 
+import { getMessageList } from "../../functions/api_request";
+import { getStorage } from "../../functions/storage"; 
+import { messageSocket } from "../../functions/message_sockets";
 
 
 
@@ -13,41 +16,18 @@ function MessageList({target_id, socket}) {
   
 
   useEffect(() => {
-     AsyncStorage.getItem('userId').then(userId => {
-        AsyncStorage.getItem('token').then(token => {
-            console.log("userId : ", userId);
-            console.log("token : ", token);
-            setUserId(userId);
-            const API_LINK = process.env['API_LINK'] + "/api/chat";
-            let requestOptions = {  
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json', "authorization": token, "user_id":userId, "target_id":target_id  },
-            };
-            axios.get(API_LINK,requestOptions).then(res => {
-                console.log(res);
-                let data = res.data;
-                setMessages(data);
-                console.log(data);
-            })
-          const messageListener = (message) => {
-            setMessages((prevMessages) => {
-              const newMessages = {...prevMessages};
-              if((message.user_id === userId && message.target_id === target_id) || ((message.user_id) === target_id.toString() &&  (message.target_id).toString() === getCookie("userId"))){
-                  newMessages[message.id] = message;
-              }
-              return newMessages;
-            });
-          };
-          socket.on('message', messageListener);
-          let Users = {user_id : userId, target_id : target_id, token : token}
-          socket.emit('getMessages', Users);
+    messageSocket(target_id, socket, messages, setMessages);
+  }, [target_id, socket]);
 
-          return () => {
-            socket.off('message', messageListener);
-          };
-        })
-    })
-  }, [target_id,socket]);
+  useEffect(() => {
+    getMessageList(target_id).then(data => {
+      setMessages(data);
+    });
+    getStorage('userId').then(userId => {
+      setUserId(userId);
+    });
+  }, [target_id]);
+
 
   return (
     <CustomFlatList
@@ -64,26 +44,29 @@ const Message_user = (params) => {
   const message = params.message
   const message_User = message.user_id;
   const userId = params.userId;  
-  if (userId === message_User.toString()) {
-    return (
-      <UserMewssage
-        key={message.id}
-        title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
-      >
-        <UserMewssageText>{message.message_value}</UserMewssageText>
-        <UserMewssageText>{new Date(message.message_time).toLocaleTimeString()}</UserMewssageText>
-      </UserMewssage>
-    );
-  }else{
-    return (
-      <ContactMessage
-        key={message.id}
-        title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
-      >
-        <ContactMessageText>{message.message_value}</ContactMessageText>
-        <ContactMessageText>{new Date(message.message_time).toLocaleTimeString()}</ContactMessageText>
-      </ContactMessage>
-    );
+  if (message_User != undefined){
+    if ( userId == message_User) {
+      return (
+        <UserMewssage
+          key={message.id}
+          title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
+        >
+          <UserMewssageText>{message.message_value}</UserMewssageText>
+          <UserMewssageText>{new Date(message.message_time).toLocaleTimeString()}</UserMewssageText>
+        </UserMewssage>
+      );
+    }else{
+      return (
+        <ContactMessage
+          key={message.id}
+          title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
+        >
+          <ContactMessageText>{message_User}</ContactMessageText>
+          <ContactMessageText>{message.message_value}</ContactMessageText>
+          <ContactMessageText>{new Date(message.message_time).toLocaleTimeString()}</ContactMessageText>
+        </ContactMessage>
+      );
+    }
   }
 }
 

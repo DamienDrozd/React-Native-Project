@@ -11,6 +11,7 @@ import  MapView, {Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import Update_Button from "../../components/Update_User"; 
 import { useTranslation } from "react-i18next";
 
+import { getStorage } from "../../functions/storage"; 
 
 
 export default function Location({ route, navigation }) {
@@ -18,9 +19,7 @@ export default function Location({ route, navigation }) {
   const [user, setUser] = useState({longitude: 0, latitude: 0, searchRange: 100});
  
     useEffect(() => {
-      AsyncStorage.getItem('user').then(fetchedUser => {
-        fetchedUser = JSON.parse(fetchedUser);
-        fetchedUser.birthday = new Date(fetchedUser.birthday);
+      getStorage('user').then(fetchedUser => {
         if ( fetchedUser.longitude == undefined || fetchedUser.longitude == "" || fetchedUser.longitude == null){
           fetchedUser.longitude = 0;
         }
@@ -31,7 +30,6 @@ export default function Location({ route, navigation }) {
           fetchedUser.searchRange = 100;
         }
         setUser(fetchedUser);
-        console.log("storage user : ", user)
       });
       getOneTimeLocation();
     }, []);
@@ -69,7 +67,6 @@ export default function Location({ route, navigation }) {
     );
   };
 
-console.log(user); 
     
 return (
   <View>

@@ -24,7 +24,8 @@ export async function Logout() {
 
 export async function getStorage(value){
     return AsyncStorage.getItem(value).then((getItem) => {
-        return getItem
+        console.log("get from storage : ", value, getItem);
+        return JSON.parse(getItem)
     }).catch(error => {
         console.log("storage error : ", error);
     })
