@@ -1,59 +1,66 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import SwitchSelector from "react-native-switch-selector";
-import DatePicker from 'react-native-date-picker'
 import { useTranslation } from "react-i18next";
 
 
-import Update_Button from "../../components/Update_User";
-import { getStorage } from "../../functions/storage"; 
+import Update_Button from "../../../components/Update_User";
+import { getStorage } from "../../../functions/storage"; 
+
+import { ViewCustom, Title, MainText, SwitchSelectorCustom, DatePickerCustom } from "../styles";
 
 
 
 
-export default function Profile2({ route, navigation }) {
+const Profile2 = ({ route, navigation }) => {
   const { t } = useTranslation();
   const [user, setUser] = useState({"birthday": new Date()});
+  const [navButton, setNavButton] = useState(null);
 
   useEffect(() => {
    getStorage('user').then(fetchedUser => {
         if (fetchedUser.birthday == undefined){
           fetchedUser.birthday = new Date();
+          fetchedUser.birthday.setFullYear(fetchedUser.birthday.getFullYear() - 18);
         } else {
           fetchedUser.birthday = new Date(fetchedUser.birthday);
+          let age = new Date().getFullYear() - fetchedUser.birthday.getFullYear();
+          console.log(age);
+          if (age < 18){
+            fetchedUser.birthday.setFullYear(fetchedUser.birthday.getFullYear() - 18);
+          }
         }
         setUser(fetchedUser);
     });
   }, []);
 
-
-  let navButton;
-  if (user.birthday != undefined && user.birthday != "" && user.gender != undefined && user.gender != "" ){ 
-    navButton = (
-      <View>
-        <Update_Button user={user} prevPage="Profile1" nextPage="Profile3"  navigation={navigation} />
-      </View>
-    )
-  } else {
-    navButton = (
-      <View> 
-        <Text>Remplissez tous les champs</Text>
-        <Update_Button user={user} prevPage="Profile1" nextPage=""  navigation={navigation} />
-      </View>
-    )
-  }
+  useEffect(() => {
+    let age = new Date().getFullYear() - user.birthday.getFullYear();
+    console.log(age);
+    if (user.birthday != undefined && user.birthday != "" && user.gender != undefined && user.gender != "" && age >= 18 && age < 99){ 
+      setNavButton(
+        <View>
+          <Update_Button user={user} prevPage="Profile1" nextPage="Profile3"  navigation={navigation} />
+        </View>
+      )
+    } else {
+      setNavButton(
+        <View> 
+          <Text>Remplissez tous les champs</Text>
+          <Update_Button user={user} prevPage="Profile1" nextPage=""  navigation={navigation} />
+        </View>
+      )
+    }
+  }, [user]);
 
 
   return (
-    <View>
+    <ViewCustom>
 
-      <Text>{t("profile.title")}</Text>
+      <Title>{t("profile.title")}</Title>
  
       <View>
-        <View>
-          <Text>{t("profile.birth_date")}</Text>
-          <DatePicker
+          <MainText>{t("profile.birth_date")}</MainText>
+          <DatePickerCustom
             date={user["birthday"]}
             onDateChange={(date) => {
                 let newUser = {...user};
@@ -62,13 +69,9 @@ export default function Profile2({ route, navigation }) {
             }}
             mode = "date"
           />
-        </View>
       </View>
       <View>
-        <View>
-          <Text>{t("profile.gender")}</Text>
-        </View>
-        <View>
+          <MainText>{t("profile.gender")}</MainText>
           <View
             style={{
               alignContent: "center",
@@ -76,7 +79,7 @@ export default function Profile2({ route, navigation }) {
               justifyContent: "center",
             }}
           >
-            <SwitchSelector
+            <SwitchSelectorCustom
               initial={0}
               onPress={value => {
                 let newUser = {...user};
@@ -89,20 +92,17 @@ export default function Profile2({ route, navigation }) {
                 { label: t("profile.female_gender"), value: "Female" },
                 { label: t("profile.other_gender"), value: "Other" }
               ]}
-              testID="gender-switch-selector"
-              accessibilityLabel="gender-switch-selector"
             />
           </View>
-        </View>
 
 
         {navButton}
       </View>
 
-    </View>
+    </ViewCustom>
   );
 }
 
 
-
+export default Profile2;
 

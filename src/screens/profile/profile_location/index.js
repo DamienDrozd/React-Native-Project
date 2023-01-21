@@ -1,55 +1,58 @@
 
 
 import React, {  useEffect, useState  } from "react";
-import { View, Text, Button, TextInput, Dimensions } from "react-native";
-import axios from "axios";
+import { View, Dimensions } from "react-native";
 // import google from "google-maps"
-import {Slider} from '@miblanchard/react-native-slider';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import  MapView, {Circle, PROVIDER_GOOGLE } from 'react-native-maps';
-import Update_Button from "../../components/Update_User"; 
+import Update_Button from "../../../components/Update_User"; 
 import { useTranslation } from "react-i18next";
 
-import { getStorage } from "../../functions/storage"; 
+import { getStorage } from "../../../functions/storage"; 
+
+import { ViewCustom, Title, MainText, SliderCustom } from "../styles";
 
 
-export default function Location({ route, navigation }) {
+
+const Location = ({ route, navigation }) => {
   const { t } = useTranslation();
   const [user, setUser] = useState({longitude: 0, latitude: 0, searchRange: 100});
+  const [navButton, setNavButton] = useState(null);   
+
  
-    useEffect(() => {
-      getStorage('user').then(fetchedUser => {
-        if ( fetchedUser.longitude == undefined || fetchedUser.longitude == "" || fetchedUser.longitude == null){
-          fetchedUser.longitude = 0;
-        }
-        if ( fetchedUser.latitude == undefined || fetchedUser.latitude == "" || fetchedUser.latitude == null){
-          fetchedUser.latitude = 0;
-        }
-        if ( fetchedUser.searchRange == undefined || fetchedUser.searchRange == "" || fetchedUser.searchRange == null){
-          fetchedUser.searchRange = 100;
-        }
-        setUser(fetchedUser);
-      });
-      getOneTimeLocation();
-    }, []);
+  useEffect(() => {
+    getStorage('user').then(fetchedUser => {
+      if ( fetchedUser.longitude == undefined || fetchedUser.longitude == "" || fetchedUser.longitude == null){
+        fetchedUser.longitude = 0;
+      }
+      if ( fetchedUser.latitude == undefined || fetchedUser.latitude == "" || fetchedUser.latitude == null){
+        fetchedUser.latitude = 0;
+      }
+      if ( fetchedUser.searchRange == undefined || fetchedUser.searchRange == "" || fetchedUser.searchRange == null){
+        fetchedUser.searchRange = 100;
+      }
+      setUser(fetchedUser);
+    });
+    getOneTimeLocation();
+  }, []);
 
 
-    let navButton;
+  useEffect(() => {
     if (user.longitude != undefined && user.longitude != 0 && user.latitude != undefined && user.latitude != 0 && user.searchRange != undefined && user.searchRange != 0 ){ 
-        navButton = (
+        setNavButton(
             <View>
                 <Update_Button user={user} prevPage="Profile5" nextPage="Profile7"  navigation={navigation} />
             </View>
         ) 
     } else {
-        navButton = (
+        setNavButton(
             <View> 
-                <Text>{t("profile.fill")}</Text>
+                <MainText>{t("profile.fill")}</MainText>
                 <Update_Button user={user} prevPage="Profile5" nextPage=""  navigation={navigation} />
             </View>
         )
     }
+  }, [user]);
 
   const getOneTimeLocation = () => {
     Geolocation.getCurrentPosition(
@@ -69,11 +72,11 @@ export default function Location({ route, navigation }) {
 
     
 return (
-  <View>
+  <ViewCustom>
     <View>
-    <Text>{t("profile.search_zone")}</Text>
-      <Text> {user.searchRange} km</Text>
-      <Slider
+    <Title>{t("profile.search_zone")}</Title>
+      <MainText> {user.searchRange} km</MainText>
+      <SliderCustom
         value={user.searchRange}
         minimumValue={5}
         maximumValue={1000}
@@ -113,9 +116,10 @@ return (
     </MapView>
 
     {navButton}
-  </View>
+  </ViewCustom>
   );
 } 
 
 
 
+export default Location;

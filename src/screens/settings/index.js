@@ -2,6 +2,10 @@ import React from "react";
 import { View, Text, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
+// import notifee from '@notifee/react-native';
+
+import { SettingsView, Button_Settings, Button_Settings_Text, SettingsTitle } from './styles';
+
 
 import "../../config/translationInit";
 
@@ -21,24 +25,32 @@ const Settings = ({ navigation }) => {
             console.log("storage error : ", error);
         });
     }
+
+
     
 
     return (
-        <View>
-            <Text> 
+        <SettingsView>
+            <SettingsTitle> 
                 {t("settings.title")}
-            </Text>
-            <Button title={t("settings.logout")} onPress={Logout} />
-            <Button title={t("settings.profile_edit")} onPress={() => navigation.navigate('Profile')} />
-            <Button
-                title={t("settings.language_fr")}
+            </SettingsTitle>
+            <Button_Settings  onPress={Logout} >
+                <Button_Settings_Text>{t("settings.logout")}</Button_Settings_Text>
+            </Button_Settings>
+            <Button_Settings  onPress={() => navigation.navigate('Profile')} >
+                <Button_Settings_Text>{t("settings.profile_edit")}</Button_Settings_Text>
+            </Button_Settings>
+            <Button_Settings
                 onPress={() => i18n.changeLanguage("fr")}
-            />
-            <Button
-                title={t("settings.language_en")}
+            >
+                <Button_Settings_Text>{t("settings.language_fr")}</Button_Settings_Text>
+            </Button_Settings>
+            <Button_Settings
                 onPress={() => i18n.changeLanguage("en")}
-            />
-        </View >
+            >
+                <Button_Settings_Text>{t("settings.language_en")}</Button_Settings_Text>
+            </Button_Settings>
+        </SettingsView >
     );
     }
  

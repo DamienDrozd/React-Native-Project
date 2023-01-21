@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator, SafeAreaView } from "react-native";
 import { useTranslation } from "react-i18next";
-import {HomeSwiperView} from "./styles"
+import {HomeSwiperView, TitleView, TitleText} from "./styles"
 import Swipe  from "../../components/Swipe";
 
 import { GetMatchList} from "../../functions/api_request"
+import Loading from "../../components/loading";
 
 
 
@@ -29,9 +30,7 @@ const Match = () => {
 
     if (loading) {
         return (
-        <SafeAreaView>
-            <ActivityIndicator />
-        </SafeAreaView>
+            <Loading />
         );
     }
 
@@ -40,7 +39,9 @@ const Match = () => {
     return (
         <View>
             <HomeSwiperView>
-                <Text>{t("home.title")}</Text>
+                <TitleView>
+                    <TitleText>{t("home.title")}</TitleText>
+                </TitleView>
                 <Swipe userList={userList} />
             </HomeSwiperView>
         </View>

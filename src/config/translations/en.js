@@ -1,4 +1,4 @@
-import Biographie from "../../screens/profile_biographie";
+import Biographie from "../../screens/profile/profile_biographie";
 
 export default {
   translation: {
@@ -50,9 +50,10 @@ export default {
         other_gender: "Other", 
         min_age: "minimum age preferred",
         max_age: "maximum age preferred",
+        age: "age preferred",
         sexual_preference: "What is your sexal interest",
-        male_search: "Man",
-        female_search: "Woman",
+        homo_search: "Homosexual",
+        hetero_search: "Heterosexual",
         bi_search: "Bisexual",
         biography: "Fill your biography",
         interest:"please choose 5 interst centers",

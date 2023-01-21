@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { useTranslation } from "react-i18next";
 import { ViewCustom, ButtonOrange, ButtonOrangeText, HeaderText, MainText, Link, FieldInput, PasswordInput, Header, Spacer } from './styles';
 
@@ -49,6 +48,7 @@ const Login = ({ navigation }) => {
                     value={email}
                     onChangeText={(text) => setEmail(text)}
                     keyboardType="email-address"
+                    autoComplete="email"
                 />
 
 
@@ -60,6 +60,7 @@ const Login = ({ navigation }) => {
                     value={password}
                     secureTextEntry={true}
                     onChangeText={(text) => setPassword(text)}
+                    autoComplete="password"
                 />
                 <ButtonOrange title={t("login.button_login")} onPress={() => log()}>
                     <ButtonOrangeText>

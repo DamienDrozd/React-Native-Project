@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, SafeAreaView, Button } from "react-native";
+import { ActivityIndicator, SafeAreaView } from "react-native";
 import { GetContactList } from "../../functions/api_request";
 
+import { ContactView, Button_Contact, Button_Contact_Text, ContactTitle, Container, NewMatchTitle, NewMatchView, Button_Contact_Sub_Text } from './styles';
+import Loading from "../../components/loading";
 
  
-export default function Contact({navigation}) {
+const Contact = ({navigation}) => {
     const [contactList, setContactList] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -21,24 +23,28 @@ export default function Contact({navigation}) {
 
     if (loading) {
         return (
-        <SafeAreaView>
-            <ActivityIndicator />
-        </SafeAreaView>
+            <Loading />
         );
     }
 
     return (
-        <View className="message-app">
+        <ContactView className="message-app">
+            {/* <NewMatchView>
+                <NewMatchTitle>Nouveaux matchs</NewMatchTitle>
+            </NewMatchView> */}
+            <ContactTitle>Contacts</ContactTitle>
             {contactList.map((contact) => (
-                <View className="contact" key={contact.contact_id}>
-                    <Text>{contact.firstname}</Text>
-                    <Button  title={contact.firstname} onPress={() => {
+                <Container key={contact.id}>
+                    <Button_Contact onPress={() => {
                         navigation.navigate('Chat', {contact : contact})
-                    }}/>
-                </View>
+                    }}>
+                        <Button_Contact_Text>{contact.firstname}</Button_Contact_Text>
+                        <Button_Contact_Sub_Text>last message appear here</Button_Contact_Sub_Text>
+                    </Button_Contact>
+                </Container>
             ))}
-        </View>
+        </ContactView>
     );
 }
 
-
+export default Contact;

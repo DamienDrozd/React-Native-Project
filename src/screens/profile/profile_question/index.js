@@ -1,22 +1,25 @@
 
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {View, Text, TextInput, SafeAreaView, ActivityIndicator} from 'react-native';
-import ModalSelector from 'react-native-modal-selector'
+import {View, Text, SafeAreaView, ActivityIndicator} from 'react-native';
 import { useTranslation } from "react-i18next";
-import Update_Button from "../../components/Update_User";
+import Update_Button from "../../../components/Update_User";
 
 
-import { getStorage } from "../../functions/storage"; 
-import { getQuestionList } from "../../functions/api_request";
+import { getStorage } from "../../../functions/storage"; 
+import { getQuestionList } from "../../../functions/api_request";
+
+import {  ViewCustom, Title, ModalSelectorCustom, FieldInput } from "../styles";
+
+import Loading from "../../../components/loading";
 
 
  
-export default function QuestionProfil({ route, navigation }) {
+const QuestionProfil = ({ route, navigation }) => {
   const { t } = useTranslation();
   const [user, setUser] = useState({"question_id": [0,0,0], "response": ["","",""]});
   let index = 0;
+  const [navButton, setNavButton] = useState(null);   
   const [questionList, setquestionList] = useState([{ key: index++, label: "question 1 ?"},{ key: index++, label: "question 2 ?"},{ key: index++, label: "question 3 ?"}, {}, {},{}]);
   const [loading, setLoading] = React.useState(true);
 
@@ -26,7 +29,7 @@ export default function QuestionProfil({ route, navigation }) {
       console.log("question_id : ", fetchedUser.question_id)
       console.log("response : ", fetchedUser.response)
       if(fetchedUser.question_id == undefined || fetchedUser.question_id.length != 3){
-        fetchedUser.question_id = [0,0,0];
+        fetchedUser.question_id = [];
       } 
       if(fetchedUser.response == undefined || fetchedUser.response.length != 3){
         fetchedUser.response = ["","",""];
@@ -41,39 +44,41 @@ export default function QuestionProfil({ route, navigation }) {
         
   }, []);
 
-    if (loading) {
-    return (
-      <SafeAreaView>
-        <ActivityIndicator />
-      </SafeAreaView>
-    );
-  }
 
-
-  let navButton;
-    if (user.question_id.length == 3 && user.response.length == 3 && user.response[0] != "" && user.response[1] != "" && user.response[2] != "" ){ 
-      navButton = (
+  useEffect(() => {
+    if (user.question_id.length == 3 && user.response.length == 3 && user.response[0] != "" && user.response[1] != "" && user.response[2] != ""  ){ 
+      setNavButton(
         <View>
           <Update_Button user={user} prevPage="Profile6" nextPage="Auth"  navigation={navigation} />
         </View>
       ) 
     } else {
-      navButton = (
+      setNavButton(
         <View> 
           <Text>{t("profile.fill")}</Text>
           <Update_Button user={user} prevPage="Profile6" nextPage=""  navigation={navigation} />
         </View>
       )
     }
+  }, [user]);
+
+    if (loading) {
+    return (
+      <Loading />
+    );
+  }
+
+
+  
 
   
     return (
       
-      <View>
-        <Text>{t("profile.question_title")}</Text>
+      <ViewCustom>
+        <Title>{t("profile.question_title")}</Title>
         <View>
           <View>
-            <ModalSelector
+            <ModalSelectorCustom
               data={questionList}
               // initValue={questionList[user.question_id[0]].label}
               onChange={(option)=>{
@@ -84,7 +89,7 @@ export default function QuestionProfil({ route, navigation }) {
             />
           </View>
           <View>
-            <TextInput
+            <FieldInput
               value={user.response[0]}
               onChangeText={(text) => {
                   let newUser = {...user}
@@ -98,7 +103,7 @@ export default function QuestionProfil({ route, navigation }) {
 
         <View>
           <View>
-            <ModalSelector
+            <ModalSelectorCustom
               data={questionList}
               // initValue={questionList[user.question_id[1]].label}
               onChange={(option)=>{
@@ -109,7 +114,7 @@ export default function QuestionProfil({ route, navigation }) {
             />
           </View>
           <View>
-            <TextInput
+            <FieldInput
               value={user.response[1]}
               onChangeText={(text) => {
                   let newUser = {...user}
@@ -123,7 +128,7 @@ export default function QuestionProfil({ route, navigation }) {
 
         <View>
           <View>
-            <ModalSelector
+            <ModalSelectorCustom
               data={questionList}
               // initValue={questionList[user.question_id[2]].label}
               onChange={(option)=>{
@@ -134,7 +139,7 @@ export default function QuestionProfil({ route, navigation }) {
             />
           </View>
           <View>
-            <TextInput
+            <FieldInput
               value={user.response[2]}
               onChangeText={(text) => {
                   let newUser = {...user}
@@ -148,12 +153,12 @@ export default function QuestionProfil({ route, navigation }) {
         
         {navButton}
          
-      </View>
+      </ViewCustom>
     );
   }
 
 
-
+export default QuestionProfil;
 
 
 

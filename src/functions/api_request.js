@@ -2,7 +2,7 @@ import axios from "axios";
 import  { addStorage, getStorage, Logout } from './storage';
 
 
-export async function GetUser(defaultUser) {
+export const GetUser = async (defaultUser) => {
     console.log("\n\n GetUser")
     let userId = await getStorage('userId')
     let token = await  getStorage('token')
@@ -15,6 +15,7 @@ export async function GetUser(defaultUser) {
         let user = res.data;
         if (user.birthday == null) {
             user.birthday = new Date();
+            fetchedUser.birthday.setFullYear(fetchedUser.birthday.getFullYear() - 18);
         }
         console.log("User authenticated : ", user);
         addStorage("user", user)
@@ -27,7 +28,7 @@ export async function GetUser(defaultUser) {
 }
 
 
-export async function TestAuth() {
+export  const  TestAuth = async () => {
     console.log("\n\n TestAuth")
     let userId = await getStorage('userId')
     let token = await  getStorage('token')

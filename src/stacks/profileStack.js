@@ -3,16 +3,17 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaView, ActivityIndicator} from 'react-native';
 
 
-import Profile1 from "../screens/profile_1"
-import Profile2 from "../screens/profile_2"
-import Profile3 from "../screens/profile_3"
-import Biographie from "../screens/profile_biographie"
-import Interest from "../screens/profile_interest"
-import Question from "../screens/profile_question"
-import Location from "../screens/profile_location"
+import Profile1 from "../screens/profile/profile_1"
+import Profile2 from "../screens/profile/profile_2"
+import Profile3 from "../screens/profile/profile_3"
+import Biographie from "../screens/profile/profile_biographie"
+import Interest from "../screens/profile/profile_interest"
+import Question from "../screens/profile/profile_question"
+import Location from "../screens/profile/profile_location"
 
 import {GetUser} from "../functions/api_request"
 
+import Loading from "../components/loading";
 
 const Stack = createNativeStackNavigator();
 const UserContext = React.createContext("token");
@@ -33,9 +34,7 @@ const PublicStack = () => {
 
   if (loading) {
       return (
-      <SafeAreaView>
-          <ActivityIndicator />
-      </SafeAreaView>
+        <Loading />
       ); 
   }
 

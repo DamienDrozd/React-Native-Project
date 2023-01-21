@@ -39,29 +39,6 @@ const Register = ({ navigation }) => {
             alert("erreur de saisie");
         } else {
             registerRequest(email, password, navigation);
-            // const API_LINK = process.env['API_LINK'] + "/api/auth/signup";
-            // console.log("envoi de la requête");
-            // axios.post(API_LINK, {
-            //     email: email, 
-            //     password: password
-            // })
-            // .then(response => {
-            //     console.log(response);
-            //     console.log("response api : ", response.data);
-            //     AsyncStorage.setItem('token', response.data['token']).then(() => {
-            //         AsyncStorage.setItem('userId', response.data['userId'].toString()).then(() => {
-            //             alert("Register success");
-            //             navigation.navigate("Profile");
-            //         }).catch((error) => {
-            //             alert("storage error : ", error);
-            //         });
-            //     }).catch((error) => {
-            //         alert("storage error : ", error);
-            //     });
-                
-            // }).catch(error => {
-            //     alert("api error : ", error);
-            // });
         }
         
     }
@@ -84,6 +61,7 @@ const Register = ({ navigation }) => {
                     value={email}
                     onChangeText={(text) => setEmail(text)}
                     keyboardType="email-address"
+                    autoComplete="email"
                 />
                 <MainText>
                     {t("register.password")}
@@ -93,6 +71,7 @@ const Register = ({ navigation }) => {
                     value={password}
                     secureTextEntry={true}
                     onChangeText={(text) => setPassword(text)}
+                    autoComplete="password"
                 />
                 <MainText>
                     {t("register.password_confirm")}
@@ -102,6 +81,7 @@ const Register = ({ navigation }) => {
                     value={repeatPassword}
                     secureTextEntry={true}
                     onChangeText={(text) => setRepeatPassword(text)}
+                    autoComplete="password"
                 />
                 <ButtonOrange title={t("register.button_register")} onPress={() => SignIn()}>
                     <ButtonOrangeText>

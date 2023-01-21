@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
-export async function Logout() {
+export const  Logout = async ()  =>{
   AsyncStorage.getAllKeys().then((keys) => {
       AsyncStorage.multiRemove(keys).then(() => {
           console.log("Logout success");
@@ -22,7 +22,7 @@ export async function Logout() {
   });
 }
 
-export async function getStorage(value){
+export const  getStorage = async (value) =>{
     return AsyncStorage.getItem(value).then((getItem) => {
         console.log("get from storage : ", value, getItem);
         return JSON.parse(getItem)
@@ -31,7 +31,7 @@ export async function getStorage(value){
     })
 }
 
-export async function addStorage(name, value){
+export const  addStorage = async (name, value) =>{
     console.log("add to storage : ", name, value)
     return AsyncStorage.setItem(name, JSON.stringify(value)).then(() => {
         console.log(name, "added to storage");

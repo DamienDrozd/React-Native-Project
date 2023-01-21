@@ -7,8 +7,8 @@ const DIMENSION_WIDTH = Dimensions.get("window").width;
 const DIMENSION_HEIGHT = Dimensions.get("window").height;
 
 export const HomeCard =  styled.View`
-    background-color: ${props => props.theme.background};
-    border-radius: 50px;
+    background-color: white;
+    border-radius: 20px;
     width: 90%;
     margin: 5%;
     padding: 5%;
@@ -20,7 +20,8 @@ export const Name = styled.Text`
 `
 
 export const Biography = styled.View`
-    background-color: ${props => props.theme.primary};
+    background-color: ${props => props.theme.background};
+    border-radius: 20px;
 `
 
 export const BiographyText = styled.Text`
@@ -35,12 +36,14 @@ export const InteretBox = styled.Text`
     /* width: 20%; */
     margin: 2%;
     padding: 5%;
-    
+    height: 50px;
 `
 
 export const InteretView = styled.View`
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
     /* width: 100%; */
     /* display: block; */
     /* display:inline; */

@@ -1,5 +1,5 @@
 
-import Biographie from "../../screens/profile_biographie";
+import Biographie from "../../screens/profile/profile_biographie";
 
 export default {
   translation: {
@@ -51,11 +51,14 @@ export default {
         other_gender: "Autre", 
         min_age: "préférence d'age minimum",
         max_age: "préférence d'age maximum",
+        age: "préférence d'âge",
         sexual_preference: "Préférence de genre ?",
-        male_search: "Hétérosexuel",
-        female_search: "Homosexuel",
+        hetero_search: "Hétérosexuel",
+        homo_search: "Homosexuel",
         bi_search: "Bisexuelle",
         biography: "Biographie",
+        fill_min_bio: "20 caractères minimum",
+        fill_max_bio: "200 caractères maximum",
         interest:"Merci de choisir cinq centres d'intérêts",
         search_zone:"Zone géographique",
         question_title: "Décrivez vous en répondant à ses trois questions",

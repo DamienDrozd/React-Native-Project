@@ -1,8 +1,15 @@
 import React, { useState } from "react";
-import CardStack, { Card } from 'react-native-card-stack-swiper';
-import styles from './styles';
+import { Card } from 'react-native-card-stack-swiper';
+import {Text, Image} from "react-native";
 import Swipe_Card from "../Swipe_Card";
 import {sendSwipe} from "../../functions/api_request"
+
+
+
+// import SVG from "./styles/cross.svg"
+
+
+import {CustomView, ButtonStack, CardStackView, Button, Icon} from "./styles";
 
 
 
@@ -12,35 +19,50 @@ const Swipe = (props) => {
 
     const [userList, setUserList] = useState(props.userList);
 
-    const like = (user, typeOfLike) => {
-        sendSwipe(user, typeOfLike)
-    }
-
 
 
     if (userList !== undefined) { 
         return (
-            <CardStack
-                loop={true}
-                verticalSwipe={false}
-                renderNoMoreCards={() => null}
-                style = {styles.cardSwipe}
-                ref={swiper => (this.swiper = swiper)}                    
-            >
-                {userList.map((user, index) => (
-                    <Card 
-                        onSwipedLeft={() => {like(user, "dislike")}}
-                        onSwipedRight={() => {like(user, "like")}}
-                        key={index} 
-                        user={user}
+            <>
+                <CustomView>
+                    <CardStackView
+                        loop={true}
+                        verticalSwipe={false}
+                        renderNoMoreCards={() => null}
+                        ref={swiper => (this.swiper = swiper)}                    
                     >
-                        <Swipe_Card 
-                            User={user} 
+                        {userList.map((user, index) => (
+                            <Card 
+                                onSwipedLeft={() => {sendSwipe(user, "dislike")}}
+                                onSwipedRight={() => {sendSwipe(user, "like")}}
+                                key={index} 
+                                user={user}
+                            >
+                                <Swipe_Card 
+                                    User={user} 
+                                />
+                            </Card>
+                        ))}
+                    </CardStackView> 
+                </CustomView>
+                <ButtonStack>
+                    <Button onPress={() => {
+                        this.swiper.swipeLeft();
+                    }}> 
+                        <Icon
+                            source={require('./styles/cross.png')}
                         />
-                    </Card>
-                ))}
-            </CardStack> 
-        );
+                    </Button>
+                    <Button onPress={() => {
+                        this.swiper.swipeRight();
+                    }}> 
+                        <Icon
+                            source={require('./styles/heart.png')}
+                        />
+                    </Button >
+                </ButtonStack>
+            </>
+            );
     }
 }
 

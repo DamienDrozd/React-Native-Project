@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SafeAreaView, ActivityIndicator} from 'react-native';
 import { useTranslation } from "react-i18next";
 
 
@@ -9,6 +8,7 @@ import Login from '../screens/login';
 import Register from '../screens/register';
 import Auth from '../screens/auth';
 const Stack = createNativeStackNavigator();
+import Loading from '../components/loading';
 
 import { TestAuth } from '../functions/api_request';
 
@@ -39,9 +39,7 @@ const PublicStack = ({navigation}) => {
 
   if (loading) {
     return (
-      <SafeAreaView>
-        <ActivityIndicator />
-      </SafeAreaView>
+      <Loading />
     );
   }
 

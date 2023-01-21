@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { updateUser} from "../../functions/api_request"
 
+import { Next_Button, Next_Button_Text, Prev_Button, Prev_Button_Text, NavigatorView } from './styles';
 
 
 const Update_Button = (props) => {
@@ -16,10 +17,10 @@ const Update_Button = (props) => {
     
     
     return (
-    <View>
+    <NavigatorView>
         <PrevButton prevPage={prevPage} navigation={navigation} user={user} />
         <NextButton nextPage={nextPage} navigation={navigation} user={user} />
-    </View>);
+    </NavigatorView>);
 }
 
 const NextButton = (props) => {
@@ -31,9 +32,9 @@ const NextButton = (props) => {
         return null;
     }
     return(
-        <View>
-            <Button title={t("profile_navigator.next_button")} onPress={() => nextAction(nextPage, navigation, user)} ></Button>
-        </View>
+        <Next_Button  onPress={() => nextAction(nextPage, navigation, user)}>
+            <Next_Button_Text>{t("profile_navigator.next_button")}</Next_Button_Text>
+        </Next_Button>
     )
 }   
 
@@ -46,9 +47,9 @@ const PrevButton = (props) => {
         return null;
     }
     return(
-        <View>
-            <Button title={t("profile_navigator.prev_button")} onPress={() => prevAction(prevPage, navigation, user)} ></Button>
-        </View>
+        <Prev_Button  onPress={() => prevAction(prevPage, navigation, user)}>
+            <Prev_Button_Text>{t("profile_navigator.prev_button")}</Prev_Button_Text>
+        </Prev_Button>
     )
 }  
 

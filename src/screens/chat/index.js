@@ -4,13 +4,17 @@ import MessageList from '../../components/Message_List';
 import MessageInput from '../../components/Message_Input';
 import io from "socket.io-client";
 
+import Loading from '../../components/loading';
+
 const ENDPOINT = process.env['API_LINK']
 
 // import Message from "./messaging.component"
 
 
+
+
  
-export default function Chat({ route, navigation }) {
+const Chat = ({ route, navigation }) => {
     const { contact } = route.params;
     const [socket, setSocket] = useState(null);
     
@@ -52,15 +56,16 @@ export default function Chat({ route, navigation }) {
                     <MessageInput target_id={contact.contact_id}  socket={socket} />
                 </View>
             ) : (
-                <SafeAreaView>
-                    <ActivityIndicator />
-                </SafeAreaView>
+                <Loading />
             )}
         </View>
     );
 
 }
 
+
+
+export default Chat;
 
 
 

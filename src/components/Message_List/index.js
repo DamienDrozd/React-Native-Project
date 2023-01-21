@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserMewssage, UserMewssageText, ContactMessage, ContactMessageText, CustomFlatList } from './styles';
 
 import { getMessageList } from "../../functions/api_request";
@@ -9,7 +7,7 @@ import { messageSocket } from "../../functions/message_sockets";
 
 
 
-function MessageList({target_id, socket}) {
+const MessageList = ({target_id, socket}) => {
   const [messages, setMessages] = useState({});
   const [userId, setUserId] = useState(0);
   
