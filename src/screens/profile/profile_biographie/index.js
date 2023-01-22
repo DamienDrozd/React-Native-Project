@@ -6,7 +6,7 @@ import Update_Button from "../../../components/Update_User";
 
 import { getStorage } from "../../../functions/storage"; 
 
-import { BioInput, ViewCustom, Title, MainText } from "../styles";
+import { BioInput, ViewCustom, Title, MainText, ConditionText } from "../styles";
 
 
 
@@ -30,35 +30,35 @@ const Biographie = ({ route, navigation }) => {
     useEffect(() => {
         if (user.biographie != undefined && user.biographie != "" && user.biographie.length < 200 && user.biographie.length > 20 ) { 
             setNavButton(
-                <View>
+                <>
                     <Update_Button user={user} prevPage="Profile3" nextPage="Profile5"  navigation={navigation} />
-                </View>
+                </>
             ) 
         } else {
             if (user.biographie != undefined) {
                 if (user.biographie.length < 20) {
                     setNavButton(
-                        <View> 
-                            <Text>{t("profile.fill_min_bio")}</Text>
-                            <Text>{t("profile.fill")}</Text>
+                        <> 
+                            <ConditionText>{t("profile.fill_min_bio")}</ConditionText>
+                            <ConditionText>{t("profile.fill")}</ConditionText>
                             <Update_Button user={user} prevPage="Profile3" nextPage=""  navigation={navigation} />
-                        </View>
+                        </>
                     )
                 } else if (user.biographie.length > 200) {
                     setNavButton(
-                        <View> 
-                            <Text>{t("profile.fill_max_bio")}</Text>
-                            <Text>{t("profile.fill")}</Text>
+                        <> 
+                            <ConditionText>{t("profile.fill_max_bio")}</ConditionText>
+                            <ConditionText>{t("profile.fill")}</ConditionText>
                             <Update_Button user={user} prevPage="Profile3" nextPage=""  navigation={navigation} />
-                        </View>
+                        </>
                     )
                 }
             } else {
                 setNavButton(
-                    <View> 
-                        <MainText>{t("profile.fill")}</MainText>
+                    <> 
+                        <ConditionText>{t("profile.fill")}</ConditionText>
                         <Update_Button user={user} prevPage="Profile3" nextPage=""  navigation={navigation} />
-                    </View>
+                    </>
                 )
             }
         }

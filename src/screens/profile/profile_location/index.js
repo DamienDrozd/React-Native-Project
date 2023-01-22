@@ -7,10 +7,11 @@ import Geolocation from 'react-native-geolocation-service';
 import  MapView, {Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import Update_Button from "../../../components/Update_User"; 
 import { useTranslation } from "react-i18next";
+import {Slider} from '@miblanchard/react-native-slider';
 
 import { getStorage } from "../../../functions/storage"; 
 
-import { ViewCustom, Title, MainText, SliderCustom } from "../styles";
+import { ViewCustom, Title, MainText, SliderCustom, InputView, ConditionText } from "../styles";
 
 
 
@@ -40,16 +41,16 @@ const Location = ({ route, navigation }) => {
   useEffect(() => {
     if (user.longitude != undefined && user.longitude != 0 && user.latitude != undefined && user.latitude != 0 && user.searchRange != undefined && user.searchRange != 0 ){ 
         setNavButton(
-            <View>
+            <>
                 <Update_Button user={user} prevPage="Profile5" nextPage="Profile7"  navigation={navigation} />
-            </View>
+            </>
         ) 
     } else {
         setNavButton(
-            <View> 
-                <MainText>{t("profile.fill")}</MainText>
+            <> 
+                <ConditionText>{t("profile.fill")}</ConditionText>
                 <Update_Button user={user} prevPage="Profile5" nextPage=""  navigation={navigation} />
-            </View>
+            </>
         )
     }
   }, [user]);
@@ -73,21 +74,23 @@ const Location = ({ route, navigation }) => {
     
 return (
   <ViewCustom>
-    <View>
     <Title>{t("profile.search_zone")}</Title>
-      <MainText> {user.searchRange} km</MainText>
-      <SliderCustom
-        value={user.searchRange}
-        minimumValue={5}
-        maximumValue={1000}
-        step={5}
-        onValueChange={value => {
-            let newUser = {...user};
-            newUser.searchRange = value;
-            setUser(newUser)
-        }}
-      />
-    </View>
+      <InputView>
+        <MainText> {user.searchRange} km</MainText>
+        <SliderCustom>
+          <Slider
+            value={user.searchRange}
+            minimumValue={5}
+            maximumValue={1000}
+            step={5}
+            onValueChange={value => {
+                let newUser = {...user};
+                newUser.searchRange = value;
+                setUser(newUser)
+            }}
+          />
+        </SliderCustom>
+        </InputView>
     <MapView
       provider={PROVIDER_GOOGLE}
       style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height-300}}

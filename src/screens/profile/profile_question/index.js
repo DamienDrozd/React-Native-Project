@@ -9,7 +9,7 @@ import Update_Button from "../../../components/Update_User";
 import { getStorage } from "../../../functions/storage"; 
 import { getQuestionList } from "../../../functions/api_request";
 
-import {  ViewCustom, Title, ModalSelectorCustom, FieldInput } from "../styles";
+import {  ViewCustom, Title, ModalSelectorCustom, FieldInput, InputView, ConditionText } from "../styles";
 
 import Loading from "../../../components/loading";
 
@@ -48,16 +48,16 @@ const QuestionProfil = ({ route, navigation }) => {
   useEffect(() => {
     if (user.question_id.length == 3 && user.response.length == 3 && user.response[0] != "" && user.response[1] != "" && user.response[2] != ""  ){ 
       setNavButton(
-        <View>
+        <>
           <Update_Button user={user} prevPage="Profile6" nextPage="Auth"  navigation={navigation} />
-        </View>
+        </>
       ) 
     } else {
       setNavButton(
-        <View> 
-          <Text>{t("profile.fill")}</Text>
+        <> 
+          <ConditionText>{t("profile.fill")}</ConditionText>
           <Update_Button user={user} prevPage="Profile6" nextPage=""  navigation={navigation} />
-        </View>
+        </>
       )
     }
   }, [user]);
@@ -76,7 +76,7 @@ const QuestionProfil = ({ route, navigation }) => {
       
       <ViewCustom>
         <Title>{t("profile.question_title")}</Title>
-        <View>
+        <InputView>
           <View>
             <ModalSelectorCustom
               data={questionList}
@@ -99,9 +99,9 @@ const QuestionProfil = ({ route, navigation }) => {
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
             />
           </View>
-        </View>
+        </InputView>
 
-        <View>
+        <InputView>
           <View>
             <ModalSelectorCustom
               data={questionList}
@@ -124,9 +124,9 @@ const QuestionProfil = ({ route, navigation }) => {
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
             />            
           </View>
-        </View>
+        </InputView>
 
-        <View>
+        <InputView>
           <View>
             <ModalSelectorCustom
               data={questionList}
@@ -149,7 +149,7 @@ const QuestionProfil = ({ route, navigation }) => {
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
             />   
           </View>
-        </View>
+        </InputView>
         
         {navButton}
          

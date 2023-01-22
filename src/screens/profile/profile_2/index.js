@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import Update_Button from "../../../components/Update_User";
 import { getStorage } from "../../../functions/storage"; 
 
-import { ViewCustom, Title, MainText, SwitchSelectorCustom, DatePickerCustom } from "../styles";
+import { ViewCustom, Title, MainText, SwitchSelectorCustom, DatePickerCustom, InputView, ConditionText } from "../styles";
 
 
 
@@ -38,16 +38,16 @@ const Profile2 = ({ route, navigation }) => {
     console.log(age);
     if (user.birthday != undefined && user.birthday != "" && user.gender != undefined && user.gender != "" && age >= 18 && age < 99){ 
       setNavButton(
-        <View>
+        <>
           <Update_Button user={user} prevPage="Profile1" nextPage="Profile3"  navigation={navigation} />
-        </View>
+        </>
       )
     } else {
       setNavButton(
-        <View> 
-          <Text>Remplissez tous les champs</Text>
+        <> 
+          <ConditionText>Remplissez tous les champs</ConditionText>
           <Update_Button user={user} prevPage="Profile1" nextPage=""  navigation={navigation} />
-        </View>
+        </>
       )
     }
   }, [user]);
@@ -58,7 +58,7 @@ const Profile2 = ({ route, navigation }) => {
 
       <Title>{t("profile.title")}</Title>
  
-      <View>
+      <InputView>
           <MainText>{t("profile.birth_date")}</MainText>
           <DatePickerCustom
             date={user["birthday"]}
@@ -69,16 +69,10 @@ const Profile2 = ({ route, navigation }) => {
             }}
             mode = "date"
           />
-      </View>
-      <View>
+      </InputView>
+      <InputView>
           <MainText>{t("profile.gender")}</MainText>
-          <View
-            style={{
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+
             <SwitchSelectorCustom
               initial={0}
               onPress={value => {
@@ -86,6 +80,7 @@ const Profile2 = ({ route, navigation }) => {
                 newUser.gender = value;
                 setUser(newUser)
               }}
+              buttonColor= "#FC912F"
               hasPadding
               options={[
                 { label: t("profile.male_gender"), value: "Male" },
@@ -93,12 +88,9 @@ const Profile2 = ({ route, navigation }) => {
                 { label: t("profile.other_gender"), value: "Other" }
               ]}
             />
-          </View>
 
-
-        {navButton}
-      </View>
-
+      </InputView>
+      {navButton}
     </ViewCustom>
   );
 }

@@ -10,7 +10,7 @@ import Loading from "../../../components/loading";
 import { getStorage } from "../../../functions/storage"; 
 import { getInteretList } from "../../../functions/api_request";
 
-import { InterestButton, InterestButtonText, ViewCustom, Title, MainText, InterestButtonSelected, InterestButtonDisabled } from "../styles";
+import { InterestButton, InterestButtonText, ViewCustom, Title, MainText, InterestButtonSelected, InterestButtonDisabled, InteretView, ConditionText } from "../styles";
 
 
 const Interet = ({ route, navigation }) => {
@@ -37,16 +37,16 @@ const Interet = ({ route, navigation }) => {
   useEffect(() => {
     if (user.interet.length == 5 ){ 
       setNavButton(
-        <View>
+        <>
           <Update_Button user={user} prevPage="Profile4" nextPage="Profile6"  navigation={navigation} />
-        </View>
+        </>
       ) 
     } else {
       setNavButton(
-        <View> 
-          <MainText>{t("profile.fill")}</MainText>
+        <> 
+          <ConditionText>{t("profile.fill")}</ConditionText>
           <Update_Button user={user} prevPage="Profile4" nextPage=""  navigation={navigation} />
-        </View>
+        </>
       )
     }
   }, [user]);
@@ -81,7 +81,7 @@ MainText
   return (
     <ViewCustom>
       <Title>{t("profile.interest")}</Title>
-      <View>
+      <InteretView>
         {interetList.map(interet => {
           if (user.interet.includes(interet)) {
             return (
@@ -113,10 +113,10 @@ MainText
             )
           }
         })}
-      </View>
+      </InteretView>
+      
       {navButton}
-  </ViewCustom>
-
+    </ViewCustom> 
   );
 }
 
