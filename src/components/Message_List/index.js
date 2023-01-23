@@ -7,24 +7,24 @@ import { messageSocket } from "../../functions/message_sockets";
 
 
 
-const MessageList = ({target_id, socket}) => {
+const MessageList = ({conversation_id, socket}) => {
   const [messages, setMessages] = useState({});
   const [userId, setUserId] = useState(0);
   
   
 
   useEffect(() => {
-    messageSocket(target_id, socket, messages, setMessages);
-  }, [target_id, socket]);
+    messageSocket(conversation_id, socket, messages, setMessages);
+  }, [conversation_id, socket]);
 
   useEffect(() => {
-    getMessageList(target_id).then(data => {
+    getMessageList(conversation_id).then(data => {
       setMessages(data);
     });
-    getStorage('userId').then(userId => {
-      setUserId(userId);
+    getStorage('userId').then(data => {
+      setUserId(data);
     });
-  }, [target_id]);
+  }, [conversation_id]);
 
 
   return (
@@ -40,28 +40,29 @@ const MessageList = ({target_id, socket}) => {
 
 const Message_user = (params) => {
   const message = params.message
-  const message_User = message.user_id;
+  const message_User = message.sender.firstName;
+  const message_UserId = message.sender._id;
   const userId = params.userId;  
-  if (message_User != undefined){
-    if ( userId == message_User) {
+  if (message_UserId != undefined){
+    if ( userId == message_UserId) {
       return (
         <UserMewssage
-          key={message.id}
+          key={message._id}
           title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
         >
-          <UserMewssageText>{message.message_value}</UserMewssageText>
-          <UserMewssageText>{new Date(message.message_time).toLocaleTimeString()}</UserMewssageText>
+          <UserMewssageText>{message.content}</UserMewssageText>
+          <UserMewssageText>{new Date(message.createdAt).toLocaleTimeString()}</UserMewssageText>
         </UserMewssage>
       );
     }else{
       return (
         <ContactMessage
-          key={message.id}
+          key={message._id}
           title={`Sent at ${new Date(message.time).toLocaleTimeString()}`}
         >
           <ContactMessageText>{message_User}</ContactMessageText>
-          <ContactMessageText>{message.message_value}</ContactMessageText>
-          <ContactMessageText>{new Date(message.message_time).toLocaleTimeString()}</ContactMessageText>
+          <ContactMessageText>{message.content}</ContactMessageText>
+          <ContactMessageText>{new Date(message.createdAt).toLocaleTimeString()}</ContactMessageText>
         </ContactMessage>
       );
     }

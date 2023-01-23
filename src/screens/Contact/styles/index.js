@@ -56,7 +56,26 @@ export const NewMatchTitle = styled.Text`
 export const NewMatchView = styled.View`
     flex-direction: row;
     flex-wrap: wrap;
+    margin: 10px;
     /* align-items: center; */
     justify-content: space-around;
     height: 100px;
+`
+
+export const Button_New_Contact = styled.TouchableOpacity`
+    height: 75px;
+    width: 75px;
+    border-style: solid;
+    border-color: ${props => props.theme.sub_text};
+    border-width: 1px;
+    margin: 10px;
+    background-color: ${props => props.theme.background};
+`
+
+export const Button_New_Contact_Text = styled.Text`
+    font-size: 20px;
+    color: ${props => props.theme.text};
+    /* align-self: center; */
+    padding-top: 10px;
+    margin-left: 50px;
 `

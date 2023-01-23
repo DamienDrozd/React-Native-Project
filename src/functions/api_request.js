@@ -4,9 +4,7 @@ import  { addStorage, getStorage, Logout } from './storage';
 
 export const GetUser = async (defaultUser) => {
     console.log("\n\n GetUser")
-    let userId = await getStorage('userId')
     let token = await  getStorage('token')
-    console.log(userId, token)
     const requestOptions = {  
         headers: { 'Content-Type': 'application/json', "authorization": token  },
     };
@@ -87,7 +85,9 @@ export const GetMatchList = async () => {
     return axios.get(API_LINK,requestOptions).then(res => {
         console.log("match list : ", res.data)
         return (res.data);
-    })
+    }).catch(error => {
+        console.log("error : ", error)
+    });
 }
 
 
@@ -95,7 +95,6 @@ export const GetMatchList = async () => {
 
 export const GetContactList = async () => {
     console.log("\n\n GetContactList")
-    let userId = await getStorage('userId')
     let token = await  getStorage('token')
     const requestOptions = {  
         method: 'GET',
@@ -104,7 +103,9 @@ export const GetContactList = async () => {
     const API_LINK = process.env['API_LINK'] + "/api/conversation/";
     return axios.get(API_LINK,requestOptions).then(res => {
         return (res.data);
-    })
+    }).catch(error => {
+        console.log("error : ", error)
+    });
 }
 
 
@@ -192,15 +193,15 @@ export const getQuestionList = async () => {
 }
 
 
-export const getMessageList = async (target_id) => {
-    let userId = await getStorage('userId')
+export const getMessageList = async (conversationId) => {
+    console.log("\n\n getMessageList")
     let token = await  getStorage('token')
     const requestOptions = {  
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json', "authorization": token, "user_id":userId, "target_id":target_id  },
+        headers: { 'Content-Type': 'application/json', "authorization": token, "conversation_id": conversationId},
     };
-    const API_LINK = process.env['API_LINK'] + "/api/chat";
-    return axios.get(API_LINK,requestOptions).then(res => {
+    const API_LINK = process.env['API_LINK'] + "/api/conversation/message/";
+    return axios.get(API_LINK,  requestOptions ).then(res => {
+        console.log("message list : ", res.data)
         return (res.data);
     })
 }

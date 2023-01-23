@@ -41,7 +41,7 @@ export const InterestButton = styled.TouchableOpacity`
     color: ${props => props.theme.background};
 `
 
-export const InteretView = styled.View`
+export const InterestView = styled.View`
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;

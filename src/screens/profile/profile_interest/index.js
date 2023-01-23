@@ -24,10 +24,20 @@ const ProfileInterest = ({ route, navigation }) => {
           if (fetchedUser.interests == undefined) {
               fetchedUser.interests = [];
           }
+          for (let i = 0; i < fetchedUser.interests.length; i++) {
+            if(typeof fetchedUser.interests[i] == "string"){
+              fetchedUser.interests[i] = JSON.parse(fetchedUser.interests[i]);
+            }
+          }
           setUser(fetchedUser);
       });
 
       getInterestList().then(data => {
+        for (let i = 0; i < data.length; i++) {
+          if(typeof data[i] == "string"){
+            data[i] = JSON.parse(data[i]);
+          }
+        }
         setInterestList(data);
         setLoading(false);
       });
@@ -50,12 +60,7 @@ const ProfileInterest = ({ route, navigation }) => {
     }
   }, [user]);
 
-  if (loading) {
-    return (
-      <Loading />
-    );
-  }
-// MainText
+
   const addInterest = (interest) => {
     if (user.interests?.length < 5){
       let newUser = {...user};
@@ -67,22 +72,29 @@ const ProfileInterest = ({ route, navigation }) => {
 
   const removeInterest = (interest) => {
     let newUser = {...user};
-    newUser.interests = newUser.interests?.filter(item => item.id !== interest.id);
-    setUser(newUser)
+    if (typeof interest == "string") {
+      interest = JSON.parse(interest);
+    }
+    console.log("interest = ",interest._id)
+    newUser.interests = newUser.interests?.filter(item => item._id !== interest._id);
+    console.log("newUser = ",newUser.interests)
+    setUser( newUser)
     console.log(newUser.interests)
   }
-
-
   
 
-  
+  if (loading) {
+    return (
+      <Loading />
+    );
+  }
     
   return (
     <ViewCustom>
       <Title>{t("profile.interest")}</Title>
       <InterestView>
         {InterestList.map(interest => {
-          if (user.interests?.includes(interest)) {
+          if (containsObject(interest, user.interests)) {
             return (
               <InterestButtonSelected 
                 key={interest._id}
@@ -111,13 +123,29 @@ const ProfileInterest = ({ route, navigation }) => {
               </InterestButtonDisabled>
             )
           }
-        })}
+        }
+      )}
       </InterestView>
-      
       {navButton}
     </ViewCustom> 
   );
 }
+
+const containsObject = (obj, list) => {
+    var i;
+    if (list == undefined) {
+      return false;
+    }
+    for (i = 0; i < list.length; i++) {
+        console.log(list[i], obj)
+        if (JSON.stringify(list[i]) === JSON.stringify(obj)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 
 
 export default ProfileInterest;

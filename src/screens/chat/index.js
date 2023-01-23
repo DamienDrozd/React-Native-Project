@@ -15,12 +15,12 @@ const ENDPOINT = process.env['API_LINK']
 
  
 const Chat = ({ route, navigation }) => {
-    const { contact } = route.params;
+    const { conversation } = route.params;
     const [socket, setSocket] = useState(null);
     
 
     useEffect(() => {
-        navigation.setOptions({ title: contact.firstname });
+        navigation.setOptions({ title: conversation.members[0].firstName });
         const newSocket = io(ENDPOINT);
         newSocket.on('connect', () => {
             console.log('socket connected');
@@ -51,9 +51,9 @@ const Chat = ({ route, navigation }) => {
             { socket ? (
                 <View>
                     <View>
-                        <MessageList target_id={contact.contact_id} socket={socket} />
+                        <MessageList conversation_id={conversation._id} socket={socket} />
                     </View>
-                    <MessageInput target_id={contact.contact_id}  socket={socket} />
+                    <MessageInput conversation_id={conversation._id}  socket={socket} />
                 </View>
             ) : (
                 <Loading />

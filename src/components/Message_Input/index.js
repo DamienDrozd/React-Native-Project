@@ -3,8 +3,13 @@ import { FieldInput, MessageButton, MessageButtonText, ViewCustom } from './styl
 import { sendMessageSocket } from '../../functions/message_sockets';
 
 
-const MessageInput = ({target_id,socket}) => {
+const MessageInput = ({conversation_id, socket}) => {
   const [value, setValue] = useState('');
+
+  const submitMessage = () => {
+    sendMessageSocket(conversation_id, socket, value);
+    setValue('');
+  }; 
 
 
   return (
@@ -20,9 +25,5 @@ const MessageInput = ({target_id,socket}) => {
   );
 };
 
-const submitMessage = () => {
-  sendMessageSocket(target_id, socket, value);
-  setValue('');
-}; 
 
 export default MessageInput;

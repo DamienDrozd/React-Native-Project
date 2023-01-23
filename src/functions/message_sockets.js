@@ -4,14 +4,17 @@
 import  { getStorage } from './storage';
 
 
-export const messageSocket = async (target_id, socket, oldMessages, setMessages) => {
+export const messageSocket = async (conversation_id, socket, oldMessages, setMessages) => {
     let userId = await getStorage('userId')
     // let token = await  getStorage('token')
 
     const messageListener = (message) => {
+        console.log("message received : ", message)
+        console.log("conversation : ", message.conversation_id)
         setMessages((oldMessages) => {
             const newMessages = {...oldMessages};
-            if((message.user_id === userId && message.target_id === target_id) || ((message.user_id) === target_id.toString() &&  (message.target_id).toString() === getCookie("userId"))){
+            if((message.conversation_id === conversation_id)){
+                console.log("new message : ", message)
                 newMessages[message.id] = message;
             }
             return newMessages;
@@ -27,10 +30,10 @@ export const messageSocket = async (target_id, socket, oldMessages, setMessages)
 
 }
 
-export const sendMessageSocket = async (target_id, socket, value ) => {
+export const sendMessageSocket = async (conversation_id, socket, value ) => {
     let userId = await getStorage('userId')
     let token = await  getStorage('token')
-    let message = {value : value, user_id : userId, target_id : target_id, token : token}
+    let message = {value : value, user_id : userId, conversation_id : conversation_id, token : token}
     console.log("send message with socket : ", message)
     socket.emit('message', message);
 }
