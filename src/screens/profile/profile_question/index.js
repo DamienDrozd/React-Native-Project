@@ -17,7 +17,7 @@ import Loading from "../../../components/loading";
  
 const QuestionProfil = ({ route, navigation }) => {
   const { t } = useTranslation();
-  const [user, setUser] = useState({"question_id": [0,0,0], "response": ["","",""]});
+  const [user, setUser] = useState({"questions": [{}, {}, {}]});
   let index = 0;
   const [navButton, setNavButton] = useState(null);   
   const [questionList, setquestionList] = useState([{ key: index++, label: "question 1 ?"},{ key: index++, label: "question 2 ?"},{ key: index++, label: "question 3 ?"}, {}, {},{}]);
@@ -25,15 +25,9 @@ const QuestionProfil = ({ route, navigation }) => {
 
   useEffect(() => {
     getStorage('user').then(fetchedUser => {
-      fetchedUser.birthday = new Date(fetchedUser.birthday);
-      console.log("question_id : ", fetchedUser.question_id)
-      console.log("response : ", fetchedUser.response)
-      if(fetchedUser.question_id == undefined || fetchedUser.question_id.length != 3){
-        fetchedUser.question_id = [];
+      if(fetchedUser.questions == undefined || fetchedUser.questions.length != 3){
+        fetchedUser.questions = [{}, {}, {}];
       } 
-      if(fetchedUser.response == undefined || fetchedUser.response.length != 3){
-        fetchedUser.response = ["","",""];
-      }
       setUser(fetchedUser);
     });
 
@@ -46,7 +40,7 @@ const QuestionProfil = ({ route, navigation }) => {
 
 
   useEffect(() => {
-    if (user.question_id.length == 3 && user.response.length == 3 && user.response[0] != "" && user.response[1] != "" && user.response[2] != ""  ){ 
+    if (user.questions.length == 3 ){ 
       setNavButton(
         <>
           <Update_Button user={user} prevPage="Profile6" nextPage="Auth"  navigation={navigation} />
@@ -80,20 +74,21 @@ const QuestionProfil = ({ route, navigation }) => {
           <View>
             <ModalSelectorCustom
               data={questionList}
-              // initValue={questionList[user.question_id[0]].label}
+              // initValue={questionList[user.questions[0]].questionId}
               onChange={(option)=>{
                 let newUser = user;
-                newUser.question_id[0] = option.key;
+                newUser.questions[0].questionId = option.key;
+                newUser.questions[0].questionName = option.label;
                 setUser(newUser)
               }}
             />
           </View>
           <View>
             <FieldInput
-              value={user.response[0]}
+              value={user.questions[0]?.response}
               onChangeText={(text) => {
                   let newUser = {...user}
-                  newUser.response[0] = text;
+                  newUser.questions[0].response = text;
                   setUser(newUser);
               }}
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -108,17 +103,18 @@ const QuestionProfil = ({ route, navigation }) => {
               // initValue={questionList[user.question_id[1]].label}
               onChange={(option)=>{
                   let newUser = user;
-                  newUser.question_id[1] = option.key;
+                  newUser.questions[1].questionId = option.key;
+                  newUser.questions[1].questionName = option.label;
                   setUser(newUser)
               }}
             />
           </View>
           <View>
             <FieldInput
-              value={user.response[1]}
+              value={user.questions[1]?.response}
               onChangeText={(text) => {
                   let newUser = {...user}
-                  newUser.response[1] = text;
+                  newUser.questions[1].response = text;
                   setUser(newUser);
               }} 
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -133,17 +129,18 @@ const QuestionProfil = ({ route, navigation }) => {
               // initValue={questionList[user.question_id[2]].label}
               onChange={(option)=>{
                   let newUser = user;
-                  newUser.question_id[2] = option.key;
+                  newUser.questions[2].questionId = option.key;
+                  newUser.questions[2].questionName = option.label;
                   setUser(newUser)
               }}
             />
           </View>
           <View>
             <FieldInput
-              value={user.response[2]}
+              value={user.questions[2]?.response}
               onChangeText={(text) => {
                   let newUser = {...user}
-                  newUser.response[2] = text;
+                  newUser.questions[2].response = text;
                   setUser(newUser);
               }}
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}

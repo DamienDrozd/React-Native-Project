@@ -38,7 +38,7 @@ const Swipe_Card = (props) => {
                 </BiographyText>
             </Biography>
             <InteretView>
-                {User.interet.map((interet) => {
+                {User.interet?.map((interet) => {
                     return (
                         <InteretBox key={interet.name}>
                             <BiographyText>{interet.name}</BiographyText>
@@ -47,7 +47,7 @@ const Swipe_Card = (props) => {
                 })}
             </InteretView>
 
-            {User.question.map((question) => {
+            {User.question?.map((question) => {
                 return (
                     <View key={question.name}>
                         <View>

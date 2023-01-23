@@ -7,7 +7,7 @@ import Profile1 from "../screens/profile/profile_1"
 import Profile2 from "../screens/profile/profile_2"
 import Profile3 from "../screens/profile/profile_3"
 import Biographie from "../screens/profile/profile_biographie"
-import Interest from "../screens/profile/profile_interest"
+import ProfileInterest from "../screens/profile/profile_interest"
 import Question from "../screens/profile/profile_question"
 import Location from "../screens/profile/profile_location"
 
@@ -45,7 +45,7 @@ const PublicStack = () => {
         <Stack.Screen name="Profile2" component={Profile2} />
         <Stack.Screen name="Profile3" component={Profile3} />
         <Stack.Screen name="Profile4" component={Biographie} />
-        <Stack.Screen name="Profile5" component={Interest} />
+        <Stack.Screen name="Profile5" component={ProfileInterest} />
         <Stack.Screen name="Profile6" component={Location} /> 
         <Stack.Screen name="Profile7" component={Question} />
       </Stack.Navigator>

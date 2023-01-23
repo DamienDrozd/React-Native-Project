@@ -1,41 +1,40 @@
 
 
 import React, { useEffect, useState } from "react";
-import {View, SafeAreaView, ActivityIndicator} from 'react-native';
 import { useTranslation } from "react-i18next";
 import Update_Button from "../../../components/Update_User";
 import Loading from "../../../components/loading";
 
 
 import { getStorage } from "../../../functions/storage"; 
-import { getInteretList } from "../../../functions/api_request";
+import { getInterestList } from "../../../functions/api_request";
 
-import { InterestButton, InterestButtonText, ViewCustom, Title, MainText, InterestButtonSelected, InterestButtonDisabled, InteretView, ConditionText } from "../styles";
+import { InterestButton, InterestButtonText, ViewCustom, Title, MainText, InterestButtonSelected, InterestButtonDisabled, InterestView, ConditionText } from "../styles";
 
 
-const Interet = ({ route, navigation }) => {
+const ProfileInterest = ({ route, navigation }) => {
   const { t } = useTranslation();
-  const [interetList, setInteretList] = useState([{}]);
-  const [user, setUser] = useState({"interet": []});
+  const [InterestList, setInterestList] = useState([{}]);
+  const [user, setUser] = useState({"interests": []});
   const [loading, setLoading] = React.useState(true);
   const [navButton, setNavButton] = useState(null);   
  
     useEffect(() => {
       getStorage('user').then(fetchedUser => {
-          if (fetchedUser.interet == undefined) {
-              fetchedUser.interet = [];
+          if (fetchedUser.interests == undefined) {
+              fetchedUser.interests = [];
           }
           setUser(fetchedUser);
       });
 
-      getInteretList().then(data => {
-        setInteretList(data);
+      getInterestList().then(data => {
+        setInterestList(data);
         setLoading(false);
       });
   }, []);
 
   useEffect(() => {
-    if (user.interet.length == 5 ){ 
+    if (user.interests?.length == 5 ){ 
       setNavButton(
         <>
           <Update_Button user={user} prevPage="Profile4" nextPage="Profile6"  navigation={navigation} />
@@ -56,21 +55,21 @@ const Interet = ({ route, navigation }) => {
       <Loading />
     );
   }
-MainText
-  const addInteret = (interet) => {
-    if (user.interet.length < 5){
+// MainText
+  const addInterest = (interest) => {
+    if (user.interests?.length < 5){
       let newUser = {...user};
-      newUser.interet.push(interet);
+      newUser.interests.push(interest);
       setUser(newUser)
       console.log(user)
     } 
   }
 
-  const removeInteret = (interet) => {
+  const removeInterest = (interest) => {
     let newUser = {...user};
-    newUser.interet = newUser.interet.filter(item => item.id !== interet.id);
+    newUser.interests = newUser.interests?.filter(item => item.id !== interest.id);
     setUser(newUser)
-    console.log(newUser.interet)
+    console.log(newUser.interests)
   }
 
 
@@ -81,39 +80,39 @@ MainText
   return (
     <ViewCustom>
       <Title>{t("profile.interest")}</Title>
-      <InteretView>
-        {interetList.map(interet => {
-          if (user.interet.includes(interet)) {
+      <InterestView>
+        {InterestList.map(interest => {
+          if (user.interests?.includes(interest)) {
             return (
               <InterestButtonSelected 
-                key={interet.id}
-                onPress={() => removeInteret(interet)}
+                key={interest._id}
+                onPress={() => removeInterest(interest)}
               >
-                <InterestButtonText>{interet.name}</InterestButtonText>
+                <InterestButtonText>{interest.name}</InterestButtonText>
               </InterestButtonSelected>
           )
-          } else if (user.interet.length < 5) {
+          } else if (user.interests?.length < 5) {
             return (
                 <InterestButton 
-                  key={interet.id}
-                  onPress={() => addInteret(interet)}
+                  key={interest._id}
+                  onPress={() => addInterest(interest)}
                 >
-                  <InterestButtonText>{interet.name}</InterestButtonText>
+                  <InterestButtonText>{interest.name}</InterestButtonText>
                 </InterestButton>
             )
           } else {
             return (
-              <InterestButtonDisabled key={interet.id}
-                onPress={() => addInteret(interet)}
+              <InterestButtonDisabled key={interest._id}
+                onPress={() => addInterest(interest)}
                 color="#ff5c5c"
                 disabled
               >
-                <InterestButtonText>{interet.name}</InterestButtonText>
+                <InterestButtonText>{interest.name}</InterestButtonText>
               </InterestButtonDisabled>
             )
           }
         })}
-      </InteretView>
+      </InterestView>
       
       {navButton}
     </ViewCustom> 
@@ -121,4 +120,4 @@ MainText
 }
 
 
-export default Interet;
+export default ProfileInterest;
