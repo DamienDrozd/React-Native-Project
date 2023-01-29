@@ -2,7 +2,8 @@ import React from "react";
 import { View, Text, Button } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
-// import notifee from '@notifee/react-native';
+
+import {onDisplayNotification} from "../../functions/notification";
 
 import { SettingsView, Button_Settings, Button_Settings_Text, SettingsTitle } from './styles';
 
@@ -49,6 +50,11 @@ const Settings = ({ navigation }) => {
                 onPress={() => i18n.changeLanguage("en")}
             >
                 <Button_Settings_Text>{t("settings.language_en")}</Button_Settings_Text>
+            </Button_Settings>
+            <Button_Settings
+                onPress={() => onDisplayNotification("settings", "Voici la notification de test")}
+            >
+                <Button_Settings_Text>Notification</Button_Settings_Text>
             </Button_Settings>
         </SettingsView >
     );

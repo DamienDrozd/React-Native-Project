@@ -10,10 +10,10 @@ import { Next_Button, Next_Button_Text, Prev_Button, Prev_Button_Text, Navigator
 
 
 const Update_Button = (props) => {
-    const [user] = useState(props.user);
-    const [nextPage] = useState(props.nextPage);
-    const [prevPage] = useState(props.prevPage);
-    const [navigation] = useState(props.navigation);
+    const user = (props.user);
+    const nextPage = props.nextPage;
+    const prevPage = props.prevPage;
+    const navigation = props.navigation;
     
     
     return (
@@ -25,9 +25,14 @@ const Update_Button = (props) => {
 
 const NextButton = (props) => {
     const { t } = useTranslation();
+
+
     let nextPage = props.nextPage;
     let navigation = props.navigation;
     let user = props.user;
+
+
+
     if (nextPage == "" || nextPage == null || nextPage == undefined) {
         return null;
     }

@@ -28,10 +28,11 @@ export const GetUser = async (defaultUser) => {
 
 export const updateUser = async (user) => {
     console.log("\n\n updateUser")
-    console.log("save user : ", JSON.stringify(user))
     addStorage('user', user);
+    console.log("user saved : ", user)
     let token = await  getStorage('token')
     const body = JSON.stringify(user)
+    console.log("body : ", body)
     const requestOptions = {
         headers: { 'Content-Type': 'application/json', "authorization": token},
     };
@@ -42,7 +43,6 @@ export const updateUser = async (user) => {
             console.log(error);
             return Promise.reject(error);
         } 
-        console.log("request success")
     }).catch(error => {
         console.log("error : ", error)
     });
@@ -201,7 +201,6 @@ export const getMessageList = async (conversationId) => {
     };
     const API_LINK = process.env['API_LINK'] + "/api/conversation/message/";
     return axios.get(API_LINK,  requestOptions ).then(res => {
-        console.log("message list : ", res.data)
         return (res.data);
     })
 }

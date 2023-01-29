@@ -9,9 +9,10 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 export const HomeCard =  styled.View`
     background-color: white;
     border-radius: 20px;
-    width: 90%;
     margin: 5%;
     padding: 5%;
+    height: 100%;
+    /* width: 80%; */
 `
 
 export const Name = styled.Text`
@@ -26,17 +27,33 @@ export const Biography = styled.View`
 
 export const BiographyText = styled.Text`
     font-size: 15px;
-    color: ${props => props.theme.background};
+    color: ${props => props.theme.text};
     margin: 5%;
 `
 
 export const InteretBox = styled.Text`
     background-color: ${props => props.theme.primary};
     border-radius: 30px;
-    /* width: 20%; */
     margin: 2%;
     padding: 5%;
-    height: 50px;
+`
+
+export const InteretText = styled.Text`
+    font-size: 15px;
+    color: ${props => props.theme.background};
+`
+
+export const QuestionText = styled.Text`
+    font-size: 15px;
+    color: ${props => props.theme.text};
+    margin-left: 5%; 
+    font-weight: bold;
+`
+
+export const ResponseText = styled.Text`
+    font-size: 15px;
+    color: ${props => props.theme.text};
+    margin-left: 5%;
 `
 
 export const InteretView = styled.View`

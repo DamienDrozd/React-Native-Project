@@ -1,24 +1,33 @@
 
-
-
+import {onDisplayNotification} from "../functions/notification";
 import  { getStorage } from './storage';
 
 
-export const messageSocket = async (conversation_id, socket, oldMessages, setMessages) => {
-    let userId = await getStorage('userId')
+export const messageSocket = async (conversation_id, socket, messages, setMessages) => {
+    // let userId = await getStorage('userId')
     // let token = await  getStorage('token')
+    console.log("message socket : ", conversation_id, socket, messages, setMessages)
 
     const messageListener = (message) => {
-        console.log("message received : ", message)
-        console.log("conversation : ", message.conversation_id)
-        setMessages((oldMessages) => {
-            const newMessages = {...oldMessages};
-            if((message.conversation_id === conversation_id)){
-                console.log("new message : ", message)
-                newMessages[message.id] = message;
+        console.log("message listener : ", message)
+        console.log("old messages : ", messages)
+        getStorage('userId').then((userId) => {
+            if (message.sender._id !== userId) {
+                onDisplayNotification(message.sender.firstName, message.content.content)
             }
-            return newMessages;
-        });
+        })
+        
+        const newMessages = messages;
+        if((message.conversation_id === conversation_id)){
+            console.log("new messages : ", newMessages)
+            if (newMessages != undefined && newMessages != {}){
+                newMessages.push(message.content);
+                console.log("add message : ", message.content)
+            }
+        }
+        if (newMessages !== messages) {
+            setMessages(newMessages);
+        } 
     };
     
     socket.on('message', messageListener);
@@ -28,7 +37,8 @@ export const messageSocket = async (conversation_id, socket, oldMessages, setMes
         socket.off('message', messageListener);
     };
 
-}
+} 
+
 
 export const sendMessageSocket = async (conversation_id, socket, value ) => {
     let userId = await getStorage('userId')

@@ -40,7 +40,7 @@ const QuestionProfil = ({ route, navigation }) => {
 
 
   useEffect(() => {
-    if (user.questions.length == 3 ){ 
+    if (user.questions.length == 3 && user.questions[0].question != undefined && user.questions[1].question != undefined && user.questions[2].question != undefined && user.questions[0].answer != undefined && user.questions[1].answer != undefined && user.questions[2].answer != undefined && user.questions[0].answer != "" && user.questions[1].answer != "" && user.questions[2].answer != "" ){ 
       setNavButton(
         <>
           <Update_Button user={user} prevPage="Profile6" nextPage="Auth"  navigation={navigation} />
@@ -77,18 +77,17 @@ const QuestionProfil = ({ route, navigation }) => {
               // initValue={questionList[user.questions[0]].questionId}
               onChange={(option)=>{
                 let newUser = user;
-                newUser.questions[0].questionId = option.key;
-                newUser.questions[0].questionName = option.label;
+                newUser.questions[0].question = option.key;
                 setUser(newUser)
               }}
             />
           </View>
           <View>
             <FieldInput
-              value={user.questions[0]?.response}
+              value={user.questions[0]?.answer}
               onChangeText={(text) => {
                   let newUser = {...user}
-                  newUser.questions[0].response = text;
+                  newUser.questions[0].answer = text;
                   setUser(newUser);
               }}
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -103,18 +102,17 @@ const QuestionProfil = ({ route, navigation }) => {
               // initValue={questionList[user.question_id[1]].label}
               onChange={(option)=>{
                   let newUser = user;
-                  newUser.questions[1].questionId = option.key;
-                  newUser.questions[1].questionName = option.label;
+                  newUser.questions[1].question = option.key;
                   setUser(newUser)
               }}
             />
           </View>
           <View>
             <FieldInput
-              value={user.questions[1]?.response}
+              value={user.questions[1]?.answer}
               onChangeText={(text) => {
                   let newUser = {...user}
-                  newUser.questions[1].response = text;
+                  newUser.questions[1].answer = text;
                   setUser(newUser);
               }} 
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
@@ -129,18 +127,17 @@ const QuestionProfil = ({ route, navigation }) => {
               // initValue={questionList[user.question_id[2]].label}
               onChange={(option)=>{
                   let newUser = user;
-                  newUser.questions[2].questionId = option.key;
-                  newUser.questions[2].questionName = option.label;
+                  newUser.questions[2].question = option.key;
                   setUser(newUser)
               }}
             />
           </View>
           <View>
             <FieldInput
-              value={user.questions[2]?.response}
+              value={user.questions[2]?.answer}
               onChangeText={(text) => {
                   let newUser = {...user}
-                  newUser.questions[2].response = text;
+                  newUser.questions[2].answer = text;
                   setUser(newUser);
               }}
               style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}

@@ -6,10 +6,11 @@ import Update_Button from "../../../components/Update_User";
 import Loading from "../../../components/loading";
 
 
+
 import { getStorage } from "../../../functions/storage"; 
 import { getInterestList } from "../../../functions/api_request";
 
-import { InterestButton, InterestButtonText, ViewCustom, Title, MainText, InterestButtonSelected, InterestButtonDisabled, InterestView, ConditionText } from "../styles";
+import { InterestButton, InterestButtonText, ViewCustom, Title, InterestButtonSelected, InterestButtonDisabled, InterestView, ConditionText } from "../styles";
 
 
 const ProfileInterest = ({ route, navigation }) => {
@@ -26,7 +27,7 @@ const ProfileInterest = ({ route, navigation }) => {
           }
           for (let i = 0; i < fetchedUser.interests.length; i++) {
             if(typeof fetchedUser.interests[i] == "string"){
-              fetchedUser.interests[i] = JSON.parse(fetchedUser.interests[i]);
+              fetchedUser.interests[i] = fetchedUser.interests[i];
             }
           }
           setUser(fetchedUser);
@@ -63,10 +64,10 @@ const ProfileInterest = ({ route, navigation }) => {
 
   const addInterest = (interest) => {
     if (user.interests?.length < 5){
+      console.log("interest = ",interest)
       let newUser = {...user};
       newUser.interests.push(interest);
       setUser(newUser)
-      console.log(user)
     } 
   }
 
@@ -77,9 +78,7 @@ const ProfileInterest = ({ route, navigation }) => {
     }
     console.log("interest = ",interest._id)
     newUser.interests = newUser.interests?.filter(item => item._id !== interest._id);
-    console.log("newUser = ",newUser.interests)
     setUser( newUser)
-    console.log(newUser.interests)
   }
   
 
@@ -137,8 +136,8 @@ const containsObject = (obj, list) => {
       return false;
     }
     for (i = 0; i < list.length; i++) {
-        console.log(list[i], obj)
-        if (JSON.stringify(list[i]) === JSON.stringify(obj)) {
+        // console.log(list[i]._id, obj._id)
+        if (list[i]._id === obj._id) {
             return true;
         }
     }
