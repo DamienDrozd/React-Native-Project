@@ -17,29 +17,29 @@ import { ViewCustom, Title, MainText, SliderCustom, InputView, ConditionText } f
 
 const Location = ({ route, navigation }) => {
   const { t } = useTranslation();
-  const [user, setUser] = useState({longitude: 0, latitude: 0, searchRange: 100});
+  const [user, setUser] = useState({ position : {longitude: 0,latitude: 0}, preferences: {searchRange: 100}});
   const [navButton, setNavButton] = useState(null);   
 
  
   useEffect(() => {
     getStorage('user').then(fetchedUser => {
-      if ( fetchedUser.longitude == undefined || fetchedUser.longitude == "" || fetchedUser.longitude == null){
-        fetchedUser.longitude = 0;
+      if ( fetchedUser.position?.longitude == undefined || fetchedUser.position?.longitude == "" || fetchedUser.position?.longitude == null){
+        fetchedUser.position.longitude = 0;
       }
-      if ( fetchedUser.latitude == undefined || fetchedUser.latitude == "" || fetchedUser.latitude == null){
-        fetchedUser.latitude = 0;
+      if ( fetchedUser.position?.latitude == undefined || fetchedUser.position?.latitude == "" || fetchedUser.position?.latitude == null){
+        fetchedUser.position.latitude = 0;
       }
-      if ( fetchedUser.searchRange == undefined || fetchedUser.searchRange == "" || fetchedUser.searchRange == null){
-        fetchedUser.searchRange = 100;
+      if ( fetchedUser.preferences?.searchRange == undefined || fetchedUser.preferences?.searchRange == "" || fetchedUser.preferences?.searchRange == null){
+        fetchedUser.preferences.searchRange = 100;
       }
       setUser(fetchedUser);
     });
     getOneTimeLocation();
-  }, []);
+  }, []); 
 
 
   useEffect(() => {
-    if (user.longitude != undefined && user.longitude != 0 && user.latitude != undefined && user.latitude != 0 && user.searchRange != undefined && user.searchRange != 0 ){ 
+    if (user.position?.longitude != undefined && user.position?.longitude != 0 && user.position?.latitude != undefined && user.position?.latitude != 0 && user.preferences?.searchRange != undefined && user.preferences?.searchRange != 0 ){ 
         setNavButton(
             <>
                 <Update_Button user={user} prevPage="Profile5" nextPage="Profile7"  navigation={navigation} />
@@ -59,8 +59,8 @@ const Location = ({ route, navigation }) => {
     Geolocation.getCurrentPosition(
         (position) => {
           let newUser = user;
-          newUser.longitude = position.coords.longitude;
-          newUser.latitude = position.coords.latitude; 
+          newUser.position.longitude = position.coords.longitude;
+          newUser.position.latitude = position.coords.latitude; 
           setUser(newUser);
         },
         (error) => {
@@ -76,16 +76,16 @@ return (
   <ViewCustom>
     <Title>{t("profile.search_zone")}</Title>
       <InputView>
-        <MainText> {user.searchRange} km</MainText>
+        <MainText> {user.preferences?.searchRange} km</MainText>
         <SliderCustom>
           <Slider
-            value={user.searchRange}
+            value={user.preferences?.searchRange}
             minimumValue={5}
             maximumValue={1000}
             step={5}
             onValueChange={value => {
                 let newUser = {...user};
-                newUser.searchRange = value;
+                newUser.preferences.searchRange = value;
                 setUser(newUser)
             }}
           />
@@ -95,10 +95,10 @@ return (
       provider={PROVIDER_GOOGLE}
       style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height-300}}
       region={{
-        latitude: user.latitude,
-        longitude: user.longitude,
-        latitudeDelta: user.searchRange / 30,
-        longitudeDelta: user.searchRange / 30,
+        latitude: user.position?.latitude,
+        longitude: user.position?.longitude,
+        latitudeDelta: user.preferences?.searchRange / 30,
+        longitudeDelta: user.preferences?.searchRange / 30,
       }}
       pitchEnabled={false}
       rotateEnabled={false}
@@ -106,12 +106,12 @@ return (
       zoomEnabled={false}
     >
       <Circle
-        key = { (user.longitude + user.latitude).toString() }
+        key = { (user.position?.longitude + user.position?.latitude).toString() }
         center = {{
-            latitude: user.latitude,
-            longitude: user.longitude
+            latitude: user.position?.latitude,
+            longitude: user.position?.longitude
           }}
-        radius = { user.searchRange * 1000 }
+        radius = { user.preferences?.searchRange * 1000 }
         strokeWidth = { 1 }
         strokeColor = { '#1a66ff' }
         fillColor = { 'rgba(230,238,255,0.5)' }

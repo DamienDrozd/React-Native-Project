@@ -15,12 +15,13 @@ const ENDPOINT = process.env['API_LINK']
 
  
 const Chat = ({ route, navigation }) => {
-    const { contact } = route.params;
+    const { conversation } = route.params;
+    const {name} = route.params;
     const [socket, setSocket] = useState(null);
     
 
     useEffect(() => {
-        navigation.setOptions({ title: contact.firstname });
+        navigation.setOptions({ title: name });
         const newSocket = io(ENDPOINT);
         newSocket.on('connect', () => {
             console.log('socket connected');
@@ -29,7 +30,7 @@ const Chat = ({ route, navigation }) => {
             console.log('socket disconnected');
         });
         newSocket.on('message', (message) => {
-            console.log(message);
+            console.log(message); 
         });
         newSocket.on('error', (error) => {
             console.log(error);
@@ -39,7 +40,7 @@ const Chat = ({ route, navigation }) => {
             });
         });
         setSocket(newSocket);
-        console.log("socket", socket)
+        // console.log("socket", socket)
         return () => newSocket.close(); 
     }, [setSocket]);
 
@@ -50,10 +51,8 @@ const Chat = ({ route, navigation }) => {
         <View className="message-app">
             { socket ? (
                 <View>
-                    <View>
-                        <MessageList target_id={contact.contact_id} socket={socket} />
-                    </View>
-                    <MessageInput target_id={contact.contact_id}  socket={socket} />
+                    <MessageList conversation_id={conversation._id} socket={socket} />
+                    <MessageInput conversation_id={conversation._id}  socket={socket} />
                 </View>
             ) : (
                 <Loading />

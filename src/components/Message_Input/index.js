@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { FieldInput, MessageButton, MessageButtonText, ViewCustom } from './styles';
+import { FieldInput, MessageButton, MessageButtonText, ViewCustom, SendIcon } from './styles';
 import { sendMessageSocket } from '../../functions/message_sockets';
+const sendpng = require('./styles/send.png');
 
 
-const MessageInput = ({target_id,socket}) => {
+const MessageInput = ({conversation_id, socket}) => {
   const [value, setValue] = useState('');
+
+  const submitMessage = () => {
+    sendMessageSocket(conversation_id, socket, value);
+    setValue('');
+  }; 
 
 
   return (
@@ -14,15 +20,11 @@ const MessageInput = ({target_id,socket}) => {
         onChangeText={(text) =>  setValue(text)}
       />
       <MessageButton onPress={submitMessage} >
-        <MessageButtonText>Send</MessageButtonText>
+        <SendIcon source={sendpng}/>
       </MessageButton>   
     </ViewCustom>
   );
 };
 
-const submitMessage = () => {
-  sendMessageSocket(target_id, socket, value);
-  setValue('');
-}; 
 
 export default MessageInput;

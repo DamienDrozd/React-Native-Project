@@ -25,7 +25,7 @@ const Profile1 = ({ route, navigation }) => {
 
 
     useEffect(() => {
-        if (user.firstname != undefined && user.firstname != "" && user.lastname != undefined && user.lastname != ""  ){ 
+        if (user.firstName != undefined && user.firstName != "" && user.lastName != undefined && user.lastName != ""  ){ 
             setNavButton(
                 <>
                     <Update_Button user={user} prevPage="" nextPage="Profile2"  navigation={navigation} />
@@ -51,10 +51,10 @@ const Profile1 = ({ route, navigation }) => {
                 <MainText>{t("profile.firstname")}</MainText>
                 <FieldInput
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                    value={user.firstname}
+                    value={user.firstName}
                     onChangeText={(text) => {
                         let newUser = {...user}
-                        newUser.firstname = text; 
+                        newUser.firstName = text; 
                         setUser(newUser) 
                     }}
                 />
@@ -63,10 +63,10 @@ const Profile1 = ({ route, navigation }) => {
                 <MainText>{t("profile.lastname")}</MainText> 
                 <FieldInput 
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }} 
-                    value={user.lastname}
+                    value={user.lastName}
                     onChangeText={(text) => { 
                         let newUser = {...user}
-                        newUser.lastname = text; 
+                        newUser.lastName = text; 
                         setUser(newUser)
                     }} 
                 />

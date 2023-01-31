@@ -9,16 +9,15 @@ const DIMENSION_HEIGHT = Dimensions.get("window").height;
 export const ContactView =  styled.View`
     flex: 1;
     align-items: center;
-    /* justify-content: center; */
+    /* justify-content: center; */ 
     background-color: ${props => props.theme.background};
 `
 
 export const Button_Contact = styled.TouchableOpacity`
-    height: 75px;
+    height: 80px;
     border-style: solid;
     border-color: ${props => props.theme.sub_text};
     border-width: 1px;
-    /* margin: 10px; */
     background-color: ${props => props.theme.background};
 `
 export const Button_Contact_Text = styled.Text`
@@ -33,6 +32,8 @@ export const Button_Contact_Sub_Text = styled.Text`
     font-size: 15px;
     color: ${props => props.theme.sub_text};
     margin-left: 50px;
+    margin-right: 50px;
+    overflow: hidden;
 `
 
 export const Container = styled.View`
@@ -48,15 +49,37 @@ export const ContactTitle = styled.Text`
 
 export const NewMatchTitle = styled.Text`   
     font-size: 20px;
-    color: ${props => props.theme.primary};
-    /* align-self: center; */
+    color: ${props => props.theme.background};
+    align-self: center;
     padding-top: 10px;
 `
 
 export const NewMatchView = styled.View`
     flex-direction: row;
     flex-wrap: wrap;
+    margin: 10px;
     /* align-items: center; */
-    justify-content: space-around;
+    justify-content: center;
+    width: 100%;
+    background-color: ${props => props.theme.primary};
+`
+
+export const Button_New_Contact = styled.TouchableOpacity`
     height: 100px;
+    width: 100px;
+    margin: 10px;
+    background-color: ${props => props.theme.background};
+`
+
+export const Button_New_Contact_Text = styled.Text`
+    font-size: 15px;
+    color: ${props => props.theme.text};
+    align-self: center;
+    margin: 10px;
+    /* margin-left: 50px; */
+`
+
+export const OrangeView = styled.View`
+    background-color: ${props => props.theme.primary};
+    width: 100%;
 `
