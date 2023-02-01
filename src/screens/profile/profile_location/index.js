@@ -1,14 +1,15 @@
 
 
 import React, {  useEffect, useState  } from "react";
-import { View, Dimensions } from "react-native";
+import { View, Dimensions,  Platform, PermissionsAndroid  } from "react-native";
+
 // import google from "google-maps"
 import Geolocation from 'react-native-geolocation-service';
 import  MapView, {Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import Update_Button from "../../../components/Update_User"; 
 import { useTranslation } from "react-i18next";
 import {Slider} from '@miblanchard/react-native-slider';
-import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+// import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 
 
@@ -81,9 +82,14 @@ const Location = ({ route, navigation }) => {
             break;
         }
       })
-    }
+    } else if (Platform.OS === 'android') {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    );
+  }
     Geolocation.getCurrentPosition(
         (position) => {
+          console.log("position : ", position);
           let newUser = user;
           newUser.position.longitude = position.coords.longitude;
           newUser.position.latitude = position.coords.latitude; 
