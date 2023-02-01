@@ -83,10 +83,10 @@ const Location = ({ route, navigation }) => {
         }
       })
     } else if (Platform.OS === 'android') {
-    await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    );
-  }
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+    }
     Geolocation.getCurrentPosition(
         (position) => {
           console.log("position : ", position);
