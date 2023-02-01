@@ -8,6 +8,9 @@ import  MapView, {Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import Update_Button from "../../../components/Update_User"; 
 import { useTranslation } from "react-i18next";
 import {Slider} from '@miblanchard/react-native-slider';
+import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
+
+
 
 import { getStorage } from "../../../functions/storage"; 
 
@@ -55,7 +58,30 @@ const Location = ({ route, navigation }) => {
     }
   }, [user]);
 
-  const getOneTimeLocation = () => {
+  const getOneTimeLocation = async () => {
+    console.log("getOneTimeLocation", Platform.OS);
+    if(Platform.OS === 'ios'){
+      check(PERMISSIONS.IOS.LocationWhenInUse)
+      .then((result) => {
+        switch (result) {
+          case RESULTS.UNAVAILABLE:
+            console.log('This feature is not available (on this device / in this context)');
+            break;
+          case RESULTS.DENIED:
+            console.log('The permission has not been requested / is denied but requestable');
+            break;
+          case RESULTS.LIMITED:
+            console.log('The permission is limited: some actions are possible');
+            break;
+          case RESULTS.GRANTED:
+            console.log('The permission is granted');
+            break;
+          case RESULTS.BLOCKED:
+            console.log('The permission is denied and not requestable anymore');
+            break;
+        }
+      })
+    }
     Geolocation.getCurrentPosition(
         (position) => {
           let newUser = user;
@@ -65,7 +91,7 @@ const Location = ({ route, navigation }) => {
         },
         (error) => {
           // See error code charts below.
-          console.log(error.code, error.message);
+          console.log("error : ", error.code, error.message);
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
@@ -92,7 +118,7 @@ return (
         </SliderCustom>
         </InputView>
     <MapView
-      provider={PROVIDER_GOOGLE}
+      provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : MapView.PROVIDER_GOOGLE}
       style={{width: Dimensions.get('window').width, height: Dimensions.get('window').height-300}}
       region={{
         latitude: user.position?.latitude,

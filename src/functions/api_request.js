@@ -55,6 +55,7 @@ export  const  TestAuth = async () => {
     let token = await  getStorage('token')
     let auth_bool = false;
     const API_LINK = process.env['API_LINK'] + "/api/auth/protected";
+    console.log("get env : ", API_LINK)
     if (userId == null || token == null || userId == undefined || token == undefined) {
         console.log("User not authenticated");
         await Logout(); 

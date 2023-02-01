@@ -19,6 +19,21 @@ docker run -d -p 3001:3001 damiendrz/peel_api:latest
 ## lien de l'api hébergée : 
 20.13.115.10:3001
 
+## Lancer l'aplication : 
+
+### Sur Android : 
+npm run install-android 
+npm run start 
+npm run android
+
+
+### Sur IOS : 
+npm run install-ios 
+npm run start 
+npm run ios
+
+
+
 ## Compte a utiliser pour les messages
 user : damien@test.com
 password : testtest
