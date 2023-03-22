@@ -21,6 +21,8 @@ docker run -d -p 3001:3001 damiendrz/peel_api:latest
 
 ## Lancer l'aplication : 
 
+### L'application est pour l'instant uniquement utilisable sur Android
+
 ### Sur Android : 
 npm run install-android 
 npm run start 
