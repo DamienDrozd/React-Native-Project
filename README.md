@@ -16,8 +16,8 @@ Les profils seront affichés en fonction des préférences de l’utilisateur, m
 docker pull damiendrz/peel_api:latest
 docker run -d -p 3001:3001 damiendrz/peel_api:latest
 
-## lien de l'api hébergée : 
-20.13.115.10:3001
+## lien de l'api hébergée a mettre dans le .env: 
+API_LINK=http://20.8.238.29:3001/
 
 ## Lancer l'aplication : 
 
@@ -72,26 +72,6 @@ password : testtest
 - Design
 - Héberger API
 
-
-
-
-
-
-
-### A faire
-
-- IOS
-- Notifications Push
-- Police de texte
-- Contact Design
-- Chat Design
-- Pubs Admob - La création de compte admob de fonctionne pas.
-
-
-
-Cleaner code :
-    - sockets
-    - component navbaricon
 
 
 
